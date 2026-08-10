@@ -13,18 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - name: Install book dependencies
         run: |
+          set -euxo pipefail
           python -m pip install --upgrade pip
           python -m pip install -r requirements-check.txt
+
       - name: Build book
-        run: jupyter-book build --site
+        run: |
+          set -euxo pipefail
+          jupyter-book build --all .
+
       - name: Validate build output
         run: |
-          [ -d "_build/site" ]
+          set -euxo pipefail
+          ls -la _build || true
+          ls -la _build/html || true
+          test -d "_build/html"
+          test -f "_build/html/index.html"
