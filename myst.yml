@@ -6,9 +6,11 @@ project:
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
     - name: The Mint Lab
-  github: https://github.com/themintlab/ExecutableEngineering
+  github: themintlab/ExecutableEngineering
   license: CC-BY-4.0
   jupyter: true
+  exports:
+    - format: pdf
   exclude:
     - _build
     - .venv
@@ -141,6 +143,8 @@ project:
         - file: "Chapters/Root finding/Root finding.ipynb"
 site: 
   template: book-theme
+  downloads:
+    - pdf
   actions:
     - title: "Course AI"
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
