@@ -34,16 +34,7 @@ jobs:
       - name: Stage Pages artifact
         run: |
           rm -rf public
-          if [ -d "_build/html" ]; then
-            cp -R _build/html public
-          elif [ -d "_build/site/public" ]; then
-            cp -R _build/site/public public
-          elif [ -d "_build/site" ]; then
-            cp -R _build/site public
-          else
-            echo "No built site output found" >&2
-            exit 1
-          fi
+          cp -R _build/site public
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
