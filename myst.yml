@@ -139,7 +139,7 @@ project:
         - file: "Chapters/Root finding/Open methods.ipynb"
         - file: "Chapters/Root finding/Polynomial roots.ipynb"
         - file: "Chapters/Root finding/Root finding.ipynb"
-site:
+site: 
   template: book-theme
   actions:
     - title: "Course AI"
