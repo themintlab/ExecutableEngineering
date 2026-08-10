@@ -43,90 +43,90 @@ class OptimizerClosed:
 
     def _run_brent(self):
 
-      if self.a is None or self.b is None:
-          return []
+        if self.a is None or self.b is None:
+            return []
 
-      a, b = self.a, self.b
-      C = (3.0 - np.sqrt(5.0)) / 2.0
+        a, b = self.a, self.b
+        C = (3.0 - np.sqrt(5.0)) / 2.0
 
-      x = w = v = a + C * (b - a)
-      fx = fw = fv = self.f(x)
+        x = w = v = a + C * (b - a)
+        fx = fw = fv = self.f(x)
 
-      d = e = b - a
-      steps = []
+        d = e = b - a
+        steps = []
 
-      for iteration in range(self.max_iter):
-          m = 0.5 * (a + b)
-          tol1 = self.tol * abs(x) + 1e-12
-          tol2 = 2.0 * tol1
+        for iteration in range(self.max_iter):
+            m = 0.5 * (a + b)
+            tol1 = self.tol * abs(x) + 1e-12
+            tol2 = 2.0 * tol1
 
-          if abs(x - m) <= tol2 - 0.5 * (b - a):
-              break
+            if abs(x - m) <= tol2 - 0.5 * (b - a):
+                break
 
-          parabolic_accepted = False
-          method = "golden"
-          g = e
+            parabolic_accepted = False
+            method = "golden"
+            g = e
 
-          if abs(g) > tol1:
-              r = (x - w) * (fx - fv)
-              q = (x - v) * (fx - fw)
-              p = (x - v) * q - (x - w) * r
-              q = 2.0 * (q - r)
+            if abs(g) > tol1:
+                r = (x - w) * (fx - fv)
+                q = (x - v) * (fx - fw)
+                p = (x - v) * q - (x - w) * r
+                q = 2.0 * (q - r)
 
-              if q != 0:
-                  if q > 0:
-                      p = -p
-                  q = abs(q)
+                if q != 0:
+                    if q > 0:
+                        p = -p
+                    q = abs(q)
 
-                  p_over_q = p / q
-                  u_candidate = x + p_over_q
+                    p_over_q = p / q
+                    u_candidate = x + p_over_q
 
-                  cond1 = (a + tol2) <= u_candidate <= (b - tol2)
-                  cond2 = abs(p_over_q) < abs(0.5 * g)
+                    cond1 = (a + tol2) <= u_candidate <= (b - tol2)
+                    cond2 = abs(p_over_q) < abs(0.5 * g)
 
-                  if cond1 and cond2:
-                      u = u_candidate
-                      method = "parabolic"
-                      parabolic_accepted = True
+                    if cond1 and cond2:
+                        u = u_candidate
+                        method = "parabolic"
+                        parabolic_accepted = True
 
-          if not parabolic_accepted:
-              if x < m:
-                  e = b - x
-              else:
-                  e = a - x
-              d = C * e
-              u = x + d
-              method = "golden"
+            if not parabolic_accepted:
+                if x < m:
+                    e = b - x
+                else:
+                    e = a - x
+                d = C * e
+                u = x + d
+                method = "golden"
 
-          if abs(u - x) < tol1:
-              u = x + np.sign(u - x) * tol1
+            if abs(u - x) < tol1:
+                u = x + np.sign(u - x) * tol1
 
-          fu = self.f(u)
+            fu = self.f(u)
 
-          steps.append((a, b, x, w, v, u, method))
+            steps.append((a, b, x, w, v, u, method))
 
-          if fu <= fx:
-              if u >= x:
-                  a = x
-              else:
-                  b = x
-              v, fv = w, fw
-              w, fw = x, fx
-              x, fx = u, fu
-          else:
-              if u < x:
-                  a = u
-              else:
-                  b = u
-              if (fu <= fw) or (w == x):
-                  v, fv = w, fw
-                  w, fw = u, fu
-              elif (fu <= fv) or (v == x) or (v == w):
-                  v, fv = u, fu
+            if fu <= fx:
+                if u >= x:
+                    a = x
+                else:
+                    b = x
+                v, fv = w, fw
+                w, fw = x, fx
+                x, fx = u, fu
+            else:
+                if u < x:
+                    a = u
+                else:
+                    b = u
+                if (fu <= fw) or (w == x):
+                    v, fv = w, fw
+                    w, fw = u, fu
+                elif (fu <= fv) or (v == x) or (v == w):
+                    v, fv = u, fu
 
-          e = d if parabolic_accepted else e
+            e = d if parabolic_accepted else e
 
-      return steps
+        return steps
 
 
     def _animate_golden(self, interval_ms=1000):

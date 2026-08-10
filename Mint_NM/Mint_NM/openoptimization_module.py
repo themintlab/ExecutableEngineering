@@ -167,14 +167,6 @@ class OptimizerOpen:
         quivers = []
 
         def update(i):
-            current_path_x = [step[0] for step in steps[:i+1]]
-            current_path_y = [step[1] for step in steps[:i+1]]
-            path_line.set_data(current_path_x, current_path_y)
-
-            current_x, current_y = steps[i]
-            current_dot.set_data([current_x], [current_y])
-            current_f = self.f([current_x, current_y])
-
             for ln in simplex_lines:
                 ln.remove()
             for m in rejected_markers:

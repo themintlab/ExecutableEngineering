@@ -17,8 +17,6 @@ def tanh_derivative(x): return 1 - np.tanh(x)**2
 
 np.random.seed(42)
 
-X = np.linspace(0, 3, 50).reshape(1, -1)
-
 init_weights()
 loss_history = []
 
