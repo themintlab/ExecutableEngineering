@@ -141,6 +141,9 @@ project:
         - file: "Chapters/Root finding/Root finding.ipynb"
 site:
   template: book-theme
+  actions:
+    - title: "Course AI"
+      url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
   options:
     url: https://themintlab.github.io/ExecutableEngineering
     base_url: /ExecutableEngineering/
@@ -149,8 +152,13 @@ site:
     logo_text: Executable Engineering
     use_repository_button: true
     use_edit_page_button: true
+    use_issues_button: true
+    use_download_button: true
+    use_fullscreen_button: true
     repository_url: https://github.com/themintlab/ExecutableEngineering
     repository_branch: main
     path_to_docs: .
     launch_buttons:
+      binderhub_url: ""
       colab_url: https://colab.research.google.com
+      thebe: false
