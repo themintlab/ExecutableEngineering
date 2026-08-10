@@ -143,7 +143,7 @@ site:
   template: book-theme
   options:
     url: https://themintlab.github.io/ExecutableEngineer
-    base_url: /ExecutableEngineer
+    base_url: /ExecutableEngineer/
     folders: true
     only_build_toc_files: true
     logo_text: Executable Engineer
