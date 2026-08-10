@@ -21,8 +21,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       - name: Install book dependencies
@@ -30,12 +30,12 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-check.txt
       - name: Build book
-        run: jupyter-book build
+        run: jupyter-book build --site
       - name: Stage Pages artifact
         run: |
-          rm -rf public
-          cp -R _build/site public
-      - uses: actions/configure-pages@v5
+          mkdir -p public
+          cp -R _build/site/public/* public/
+      - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
