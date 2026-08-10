@@ -1,49 +1,62 @@
-name: Deploy Jupyter Book
+name: Build and Deploy Jupyter Book
 
 on:
-  workflow_run:
-    workflows: ["Build Jupyter Book"]
+  push:
     branches: [main]
-    types:
-      - completed
+  # We still build on pull requests to ensure nothing is broken, but we only deploy on pushes to main.
+  pull_request:
+    branches: [main]
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    # Only run the deploy job if the build job was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
+    # This environment variable fixes the BASE_URL issue!
+    env:
+      BASE_URL: /${{ github.event.repository.name }}
     steps:
-      - name: Download build artifact from Build Workflow
-        uses: actions/download-artifact@v4
-        with:
-          name: jupyter-book-build
-          path: _build/html
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-book.txt
+
+      - name: Build the book
+        run: |
+          jupyter-book build --html
 
       - name: Upload Pages artifact
+        # This action automatically tars the folder and preps it specifically for GitHub Pages deployment
         uses: actions/upload-pages-artifact@v3
         with:
           path: _build/html
 
+  deploy:
+    # This job waits for the build job to finish
+    needs: build
+    # Only run the deployment if this was a push to the main branch
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
