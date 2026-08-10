@@ -1,2 +1,42 @@
-# MyST build outputs
-_build
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+.jupyter/
+.jupyter_cache/
+
+# Jupyter Book / MyST
+_build/
+site/
+public/
+.myst/
+._config.yml.bak
+._toc.yml.bak
+
+# Coverage / test caches
+.coverage
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
