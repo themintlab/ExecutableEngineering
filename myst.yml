@@ -6,7 +6,7 @@ project:
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
     - name: The Mint Lab
-  github: https://github.com/themintlab/ExecutableEngineer
+  github: https://github.com/themintlab/ExecutableEngineering
   license: CC-BY-4.0
   jupyter: true
   exclude:
@@ -142,14 +142,14 @@ project:
 site:
   template: book-theme
   options:
-    url: https://themintlab.github.io/ExecutableEngineer
-    base_url: /ExecutableEngineer/
+    url: https://themintlab.github.io/ExecutableEngineering
+    base_url: /ExecutableEngineering/
     folders: true
     only_build_toc_files: true
     logo_text: Executable Engineer
     use_repository_button: true
     use_edit_page_button: true
-    repository_url: https://github.com/themintlab/ExecutableEngineer
+    repository_url: https://github.com/themintlab/ExecutableEngineering
     repository_branch: main
     path_to_docs: .
     launch_buttons:

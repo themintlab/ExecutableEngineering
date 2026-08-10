@@ -10,7 +10,7 @@ setup(
     description="Tools for ENGPHYS 3NM4",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/themintlab/ExecutableEngineer/tree/main/Mint_NM",
+    url="https://github.com/themintlab/ExecutableEngineering/tree/main/Mint_NM",
     author="Michael Welland",
     packages=find_packages(),
     include_package_data=True,

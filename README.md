@@ -1,4 +1,4 @@
-# ExecutableEngineer
+# ExecutableEngineering
 
 Numerical methods course content for ENGPHYS 3NM4, built as a Jupyter Book 2.0 project using MyST as the rendering engine, with the in-repo `Mint_NM` package.
 
@@ -72,7 +72,7 @@ python -m build ./Mint_NM
 Pushes to `main` branch automatically trigger:
 1. Book build validation
 2. Package checks for Mint_NM
-3. Deployment to GitHub Pages at: **https://themintlab.github.io/ExecutableEngineer/**
+3. Deployment to GitHub Pages at: **https://themintlab.github.io/ExecutableEngineering/**
 
 ### Manual deployment
 
