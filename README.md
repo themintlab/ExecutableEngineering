@@ -30,7 +30,7 @@ jupyter-book build --all --html
 
 ```bash
 python -m build ./Mint_NM
-python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, init_model"
+( cd /tmp && python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, init_model" )
 jupyter-book build --all --html
 ```
 

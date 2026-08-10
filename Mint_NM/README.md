@@ -16,5 +16,6 @@ That installs the in-repo package in editable mode so notebook changes use the l
 
 ```bash
 python -m pip install -e ./Mint_NM
+( cd /tmp && python -c "from Mint_NM import RootFinderOpen, RootFinderClosed" )
 python -m build ./Mint_NM
 ```

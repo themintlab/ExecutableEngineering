@@ -21,4 +21,4 @@ jobs:
         run: python -m build ./Mint_NM
       - name: Smoke test Mint_NM imports
         run: |
-          python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, OptimizerOpen, OptimizerClosed, OptimizerGrad, init_model"
+          ( cd /tmp && python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, OptimizerOpen, OptimizerClosed, OptimizerGrad, init_model" )

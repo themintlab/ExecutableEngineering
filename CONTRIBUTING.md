@@ -13,7 +13,7 @@ python -m pip install -r requirements-check.txt
 
 ```bash
 python -m build ./Mint_NM
-python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, OptimizerOpen"
+( cd /tmp && python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, OptimizerOpen" )
 jupyter-book build --all --html
 ```
 
