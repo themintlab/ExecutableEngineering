@@ -1,0 +1,3 @@
+-r requirements-book.txt
+build
+nbformat

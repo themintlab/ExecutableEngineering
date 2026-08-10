@@ -1,0 +1,52 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install book dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-check.txt
+      - name: Build book
+        run: jupyter-book build --all --html
+      - name: Stage Pages artifact
+        run: |
+          rm -rf public
+          if [ -d "_build/html" ]; then
+            cp -R _build/html public
+          elif [ -d "_build/site/public" ]; then
+            cp -R _build/site/public public
+          elif [ -d "_build/site" ]; then
+            cp -R _build/site public
+          else
+            echo "No built site output found" >&2
+            exit 1
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deployment
+        uses: actions/deploy-pages@v4
