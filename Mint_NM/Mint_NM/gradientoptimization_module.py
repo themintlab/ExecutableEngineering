@@ -125,6 +125,10 @@ class OptimizerGrad:
             current_dot.set_data([current_x], [current_y])
             f_val = self.f([current_x, current_y])
 
+            for q in quivers:
+                q.remove()
+            quivers.clear()
+
             if show_vectors and i > 0:
                 x_prev, y_prev = steps[i-1]
                 dx, dy = current_x - x_prev, current_y - y_prev

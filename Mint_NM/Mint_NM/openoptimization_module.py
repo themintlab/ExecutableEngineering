@@ -194,6 +194,10 @@ class OptimizerOpen:
                 simplex_lines.append(ln)
 
 
+            for q in quivers:
+                q.remove()
+            quivers.clear()
+
             if show_vectors and i > 0:
                 x_prev, y_prev = steps[i-1]
                 dx, dy = current_x - x_prev, current_y - y_prev
@@ -207,9 +211,9 @@ class OptimizerOpen:
                 f"({cx:.4f}, {cy:.4f})  f={self.f([cx, cy]):.4f}"
             )
             if method_name == "Nelder–Mead":
-             indicator_box.set_text(
-                 f"Action: {label_text}\n"
-              )
+                indicator_box.set_text(
+                    f"Action: {label_text}\n"
+                )
 
             return path_line, current_dot, title_text, indicator_box, *simplex_lines, *rejected_markers
 

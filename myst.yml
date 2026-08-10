@@ -57,7 +57,7 @@ project:
             - file: "Chapters/Differentiation and integration/Integration/Newton-Cotes formulae.ipynb"
             - file: "Chapters/Differentiation and integration/Integration/Newton-Cotes in practice.ipynb"
             - file: "Chapters/Differentiation and integration/Integration/Numerical integration.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Reimann's integrals.ipynb"
+            - file: "Chapters/Differentiation and integration/Integration/Riemann's integrals.ipynb"
             - file: "Chapters/Differentiation and integration/Integration/Romberg rule.ipynb"
             - file: "Chapters/Differentiation and integration/Integration/Simpson's rules.ipynb"
             - file: "Chapters/Differentiation and integration/Integration/Trapezoid rule.ipynb"

@@ -1,15 +1,9 @@
-# Polyfit Model UI and Plot
-import numpy as np
-import plotly.graph_objs as go
+# Neural network model UI and plotting
 import ipywidgets as widgets
-from IPython.display import display, clear_output
-from math import *
-import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
-from ipywidgets import VBox, HBox, Button, Text, Label, Output
-from IPython.display import display, clear_output
-from ipywidgets import ToggleButtons
+import numpy as np
+import plotly.graph_objs as go
 
 def init_weights():
     global W1, b1, W2, b2
@@ -283,7 +277,7 @@ def update_plots(output_plot, metrics_plot, network_plot):
             plt.show()
     with network_plot:
         if true_function:
-            activations = forward_pass(X)  # Ensure activations are defined
+            _, activations = forward_pass(X)
             G, pos, labels, edge_labels, edge_colors = draw_network(activations)
             edge_color_vals = [edge_colors.get(edge, '#888888') for edge in G.edges()]
             nx.draw(G, pos, labels=labels, node_color='lightblue', node_size=600,
