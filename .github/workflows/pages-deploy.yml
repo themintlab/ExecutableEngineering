@@ -22,21 +22,38 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - name: Install book dependencies
         run: |
+          set -euxo pipefail
           python -m pip install --upgrade pip
           python -m pip install -r requirements-check.txt
+
       - name: Build book
-        run: jupyter-book build --site
+        run: |
+          set -euxo pipefail
+          jupyter-book build --all .
+
+      - name: Verify Pages artifact content
+        run: |
+          set -euxo pipefail
+          test -d "_build/html"
+          test -f "_build/html/index.html"
+          find _build/html -maxdepth 2 -type f | head -200
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _build/site
+          path: _build/html
+
       - id: deployment
         uses: actions/deploy-pages@v4
