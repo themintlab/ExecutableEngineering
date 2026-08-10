@@ -2,7 +2,7 @@
 version: 1
 project:
   id: executableengineer
-  title: Executable Engineer
+  title: Executable Engineering
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
     - name: The Mint Lab
@@ -146,7 +146,7 @@ site:
     base_url: /ExecutableEngineering/
     folders: true
     only_build_toc_files: true
-    logo_text: Executable Engineer
+    logo_text: Executable Engineering
     use_repository_button: true
     use_edit_page_button: true
     repository_url: https://github.com/themintlab/ExecutableEngineering
