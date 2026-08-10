@@ -141,8 +141,9 @@ project:
         - file: "Chapters/Root finding/Root finding.ipynb"
 site:
   template: book-theme
-  url: https://themintlab.github.io/ExecutableEngineer
   options:
+    url: https://themintlab.github.io/ExecutableEngineer
+    base_url: /ExecutableEngineer/
     folders: true
     only_build_toc_files: true
     logo_text: Executable Engineer
