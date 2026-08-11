@@ -2,7 +2,7 @@
 version: 1
 project:
   id: executableengineer
-  title: Executable Engineering \: Interactive Numerical Methods in Python
+  title: Executable Engineering Interactive Numerical Methods in Python
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
     - name: Michael Welland
@@ -155,17 +155,4 @@ site:
     url: https://themintlab.github.io/ExecutableEngineering
     base_url: /ExecutableEngineering/
     folders: true
-    only_build_toc_files: true
     logo_text: Executable Engineering
-    use_repository_button: true
-    use_edit_page_button: true
-    use_issues_button: true
-    use_download_button: true
-    use_fullscreen_button: true
-    repository_url: https://github.com/themintlab/ExecutableEngineering
-    repository_branch: main
-    path_to_docs: .
-    launch_buttons:
-      binderhub_url: ""
-      colab_url: https://colab.research.google.com
-      thebe: false
