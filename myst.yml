@@ -9,7 +9,7 @@ project:
       affiliations:
         - McMaster University
   copyright: "2026 Michael J. Welland"
-  license: "CC-BY-NC-4.0 AND MIT"
+  license: "CC-BY-NC-4.0"
   github: themintlab/ExecutableEngineering
   jupyter: true
   exports:
