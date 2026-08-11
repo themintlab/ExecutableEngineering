@@ -2,7 +2,7 @@
 version: 1
 project:
   id: executableengineer
-  title: Executable Engineering: Interactive Numerical Methods in Python
+  title: Executable Engineering \: Interactive Numerical Methods in Python
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
     - name: Michael Welland
