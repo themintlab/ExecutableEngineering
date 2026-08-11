@@ -1,4 +1,4 @@
--e ./Mint_NM
+-e ./executable_engineering
 jupyter-book==2.1.6
 numpy
 matplotlib
