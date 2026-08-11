@@ -5,10 +5,10 @@ project:
   title: Executable Engineering Interactive Numerical Methods in Python
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
-    - name: Michael Welland
+    - name: Michael J. Welland
       affiliations:
         - McMaster University
-  copyright: "2026 Michael Welland"
+  copyright: "2026 Michael J. Welland"
   license: "CC-BY-NC-4.0 AND MIT"
   github: themintlab/ExecutableEngineering
   jupyter: true
