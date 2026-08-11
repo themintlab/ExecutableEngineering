@@ -1,5 +1,6 @@
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
+extends: toc.yml
 project:
   id: executableengineer
   title: Executable Engineering Interactive Numerical Methods in Python
@@ -16,7 +17,6 @@ project:
       id: MIT
 
   edit_url: null
-
   github: themintlab/ExecutableEngineering
   jupyter: true
   exports:
@@ -36,133 +36,3 @@ site:
   options:
     url: https://themintlab.github.io/ExecutableEngineering
     base_url: /ExecutableEngineering/
-    folders: true
-    logo_text: Executable Engineering
-
-  toc:
-    - file: "index.md"
-    - title: "Differential equations"
-      children:
-        - title: "Boundary value problems"
-          children:
-            - file: "Chapters/Differential equations/Boundary value problems/Boundary_value_problems.ipynb"
-            - file: "Chapters/Differential equations/Boundary value problems/Collocation methods.ipynb"
-            - file: "Chapters/Differential equations/Boundary value problems/Finite_difference_method.ipynb"
-            - file: "Chapters/Differential equations/Boundary value problems/Finite_volume.ipynb"
-            - file: "Chapters/Differential equations/Boundary value problems/Shooting method.ipynb"
-        - title: "Initial value problems"
-          children:
-            - file: "Chapters/Differential equations/Initial value problems/Adaptive time stepping.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Explicit methods.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/First order Runge-Kutta.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/General Runge-Kutta.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Implicit methods and stiffness.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Implicit Runge-Kutta methods.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Initial value problems.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Multistep methods.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Reduction of order.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Summary.ipynb"
-            - file: "Chapters/Differential equations/Initial value problems/Systems of equations.ipynb"
-        - title: "Partial differential equations"
-          children:
-            - file: "Chapters/Differential equations/Partial differential equations/Partial_differential_equations.ipynb"
-        - file: "Chapters/Differential equations/Differential equations.ipynb"
-    - title: "Differentiation and integration"
-      children:
-        - title: "Finite difference"
-          children:
-            - file: "Chapters/Differentiation and integration/Finite difference/Even vs uneven spacing.ipynb"
-            - file: "Chapters/Differentiation and integration/Finite difference/Finite difference.ipynb"
-            - file: "Chapters/Differentiation and integration/Finite difference/First order derivatives.ipynb"
-            - file: "Chapters/Differentiation and integration/Finite difference/Higher dimensions.ipynb"
-            - file: "Chapters/Differentiation and integration/Finite difference/Second order derivatives.ipynb"
-            - file: "Chapters/Differentiation and integration/Finite difference/Uncertainty amplification.ipynb"
-        - title: "Integration"
-          children:
-            - file: "Chapters/Differentiation and integration/Integration/Gaussian quadrature.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Newton-Cotes formulae.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Newton-Cotes in practice.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Numerical integration.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Riemann's integrals.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Romberg rule.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Simpson's rules.ipynb"
-            - file: "Chapters/Differentiation and integration/Integration/Trapezoid rule.ipynb"
-        - file: "Chapters/Differentiation and integration/Differentiation and integration.md"
-    - title: "Eigenvalue problems"
-      children:
-        - file: "Chapters/Eigenvalue problems/Eigenfunctions.ipynb"
-        - file: "Chapters/Eigenvalue problems/Eigenvalue problems.ipynb"
-        - file: "Chapters/Eigenvalue problems/Matrix decomposition methods.ipynb"
-        - file: "Chapters/Eigenvalue problems/Package tools.ipynb"
-        - file: "Chapters/Eigenvalue problems/Powers method.ipynb"
-    - title: "Finite element method"
-      children:
-        - file: "Chapters/Finite element method/Discretization and assembly.ipynb"
-        - file: "Chapters/Finite element method/Elements.ipynb"
-        - file: "Chapters/Finite element method/Finite element method.ipynb"
-        - file: "Chapters/Finite element method/Motivating example.ipynb"
-        - file: "Chapters/Finite element method/Solution.ipynb"
-        - file: "Chapters/Finite element method/Theoretical background.ipynb"
-    - title: "Interpolation and curve fitting"
-      children:
-        - title: "Curve fitting"
-          children:
-            - file: "Chapters/Interpolation and curve fitting/Curve fitting/Best fit radial basis functions.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Curve fitting/Curve fitting.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Curve fitting/Linear least squares regression.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Curve fitting/Polyfit.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Curve fitting/Weighted linear least squares.ipynb"
-        - title: "Interpolation"
-          children:
-            - file: "Chapters/Interpolation and curve fitting/Interpolation/Interpolation.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Interpolation/Polynomial interpolation.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Interpolation/Radial basis functions.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Interpolation/Splines.ipynb"
-            - file: "Chapters/Interpolation and curve fitting/Interpolation/Summary of interpolation.ipynb"
-        - file: "Chapters/Interpolation and curve fitting/Interpolation and curve fitting.ipynb"
-    - title: "Linear systems"
-      children:
-        - title: "Direct methods"
-          children:
-            - file: "Chapters/Linear systems/Direct methods/Diagonal dominance and pivoting.ipynb"
-            - file: "Chapters/Linear systems/Direct methods/Gaussian elimination.ipynb"
-            - file: "Chapters/Linear systems/Direct methods/LU decomposition.ipynb"
-            - file: "Chapters/Linear systems/Direct methods/Matrix types and sparsity.ipynb"
-        - title: "Iterative methods"
-          children:
-            - file: "Chapters/Linear systems/Iterative methods/Krylov subspace methods.ipynb"
-            - file: "Chapters/Linear systems/Iterative methods/Preconditioners.ipynb"
-            - file: "Chapters/Linear systems/Iterative methods/Stationary methods.ipynb"
-        - file: "Chapters/Linear systems/Complexity.ipynb"
-        - file: "Chapters/Linear systems/Conditioning.ipynb"
-        - file: "Chapters/Linear systems/Direct methods.ipynb"
-        - file: "Chapters/Linear systems/Iterative methods.ipynb"
-        - file: "Chapters/Linear systems/Linear systems.ipynb"
-        - file: "Chapters/Linear systems/Solvability.ipynb"
-    - title: "Numerical error"
-      children:
-        - file: "Chapters/Numerical error/Numerical error.ipynb"
-        - file: "Chapters/Numerical error/Roundoff error and finite precision representations.ipynb"
-        - file: "Chapters/Numerical error/True_and_approximate_error.ipynb"
-        - file: "Chapters/Numerical error/Truncation_error.ipynb"
-    - title: "Optimization"
-      children:
-        - file: "Chapters/Optimization/Closed methods.ipynb"
-        - file: "Chapters/Optimization/Equality constraints.ipynb"
-        - file: "Chapters/Optimization/Gradient based optimizers.ipynb"
-        - file: "Chapters/Optimization/Indefinite systems.ipynb"
-        - file: "Chapters/Optimization/Neural networks.ipynb"
-        - file: "Chapters/Optimization/Nonlinear least squares.ipynb"
-        - file: "Chapters/Optimization/Open methods.ipynb"
-        - file: "Chapters/Optimization/Optimization.ipynb"
-        - file: "Chapters/Optimization/Trust region methods.ipynb"
-    - title: "Root finding"
-      children:
-        - file: "Chapters/Root finding/Basins of attraction.ipynb"
-        - file: "Chapters/Root finding/Closed methods.ipynb"
-        - file: "Chapters/Root finding/Global convergence methods.ipynb"
-        - file: "Chapters/Root finding/Newton-Raphson method.ipynb"
-        - file: "Chapters/Root finding/Open methods.ipynb"
-        - file: "Chapters/Root finding/Polynomial roots.ipynb"
-        - file: "Chapters/Root finding/Root finding.ipynb"
-
