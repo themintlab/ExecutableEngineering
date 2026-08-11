@@ -2,12 +2,15 @@
 version: 1
 project:
   id: executableengineer
-  title: Executable Engineering
+  title: Executable Engineering: Interactive Numerical Methods in Python
   description: Numerical methods course notebooks for ENGPHYS 3NM4.
   authors:
-    - name: The Mint Lab
+    - name: Michael Welland
+      affiliations:
+        - McMaster University
+  copyright: "2026 Michael Welland"
+  license: "CC-BY-NC-4.0 AND MIT"
   github: themintlab/ExecutableEngineering
-  license: CC-BY-4.0
   jupyter: true
   exports:
     - format: pdf

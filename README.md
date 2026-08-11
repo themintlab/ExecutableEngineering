@@ -86,3 +86,12 @@ You can manually trigger the deployment via GitHub Actions web UI with the "work
 - **Python 3.11** - Book build environment
 
 
+## License
+
+**Text and Content:**
+This work, "Executable Engineering: Interactive Numerical Methods in Python" by Michael Welland, is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/). 
+
+**Code:**
+All executable Python scripts and Jupyter Notebook code cells within this repository are licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+© 2026 Michael Welland / The Mint Lab
