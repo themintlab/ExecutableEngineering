@@ -9,7 +9,12 @@ project:
       affiliations:
         - McMaster University
   copyright: "2026 Michael J. Welland"
-  license: "CC-BY-NC-4.0"
+  license:
+    content:
+      id: CC-BY-NC-4.0
+    code:
+      id: MIT
+
   github: themintlab/ExecutableEngineering
   jupyter: true
   exports:
@@ -18,6 +23,20 @@ project:
     - _build
     - .venv
     - .ipynb_checkpoints
+
+site: 
+  template: book-theme
+  downloads:
+    - pdf
+  actions:
+    - title: "Course AI"
+      url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
+  options:
+    url: https://themintlab.github.io/ExecutableEngineering
+    base_url: /ExecutableEngineering/
+    folders: true
+    logo_text: Executable Engineering
+
   toc:
     - file: "index.md"
     - title: "Differential equations"
@@ -144,15 +163,4 @@ project:
         - file: "Chapters/Root finding/Open methods.ipynb"
         - file: "Chapters/Root finding/Polynomial roots.ipynb"
         - file: "Chapters/Root finding/Root finding.ipynb"
-site: 
-  template: book-theme
-  downloads:
-    - pdf
-  actions:
-    - title: "Course AI"
-      url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
-  options:
-    url: https://themintlab.github.io/ExecutableEngineering
-    base_url: /ExecutableEngineering/
-    folders: true
-    logo_text: Executable Engineering
+
