@@ -1,12 +1,12 @@
 # ExecutableEngineering
 
-Numerical methods course content for ENGPHYS 3NM4, built as a Jupyter Book 2.0 project using MyST as the rendering engine, with the in-repo `Mint_NM` package.
+Numerical methods course content for ENGPHYS 3NM4, built as a Jupyter Book 2.0 project using MyST as the rendering engine, with the in-repo `executable_engineering` package.
 
 ## Repository layout
 
 - `index.md` — landing page
 - `Chapters/` — chapter notebooks and markdown content
-- `Mint_NM/` — local Python package used by selected notebooks
+- `executable_engineering/` — local Python package used by selected notebooks
 - `myst.yml` — Jupyter Book 2.0 configuration (MyST format)
 - `.github/workflows/` — package checks, book build, and Pages deploy
 
@@ -27,9 +27,9 @@ jupyter-book start .
 
 This will serve the site at `http://localhost:3000` (or run `python -m http.server 8000 --directory _build/site/public/` to use Python's built-in server).
 
-## Mint_NM notebook behavior
+## executable_engineering notebook behavior
 
-- Local development installs `Mint_NM` from `./Mint_NM` in editable mode.
+- Local development installs `executable_engineering` from `./executable_engineering` in editable mode.
 - Colab notebooks install the published `Mint-NM` package from PyPI.
 - Colab launch is configured through the book-level top bar, not per-page badges.
 
@@ -37,7 +37,7 @@ This will serve the site at `http://localhost:3000` (or run `python -m http.serv
 
 The repository uses GitHub Actions for continuous integration and deployment:
 
-- **Mint_NM checks** (`mint-nm-checks.yml`): Builds the package and runs smoke tests on every push and PR
+- **executable_engineering checks** (`mint-nm-checks.yml`): Builds the package and runs smoke tests on every push and PR
 - **Jupyter Book build** (`book-build.yml`): Builds the book on every push and PR to validate the build succeeds
 - **GitHub Pages deployment** (`pages-deploy.yml`): Deploys to GitHub Pages on main branch pushes
 
@@ -57,21 +57,21 @@ jupyter-book start .
 jupyter-book build --site --watch
 ```
 
-### Mint_NM package testing
+### executable_engineering package testing
 
 ```bash
 # Build the package
-python -m build ./Mint_NM
+python -m build ./executable_engineering
 
 # Test imports
-( cd /tmp && python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, OptimizerOpen, OptimizerClosed, OptimizerGrad, init_model" )
+( cd /tmp && python -c "from executable_engineering import RootFinderOpen, RootFinderClosed, OptimizerOpen, OptimizerClosed, OptimizerGrad, init_model" )
 ```
 
 ## Deployment
 
 Pushes to `main` branch automatically trigger:
 1. Book build validation
-2. Package checks for Mint_NM
+2. Package checks for executable_engineering
 3. Deployment to GitHub Pages at: **https://themintlab.github.io/ExecutableEngineering/**
 
 ### Manual deployment

@@ -1,4 +1,4 @@
-name: Mint_NM checks
+name: executable_engineering checks
 
 on:
   pull_request:
@@ -20,8 +20,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-check.txt
-      - name: Build Mint_NM
-        run: python -m build ./Mint_NM
-      - name: Smoke test Mint_NM imports
+      - name: Build executable_engineering
+        run: python -m build ./executable_engineering
+      - name: Smoke test executable_engineering imports
         run: |
-          ( cd /tmp && python -c "from Mint_NM import RootFinderOpen, RootFinderClosed, OptimizerOpen, OptimizerClosed, OptimizerGrad, init_model" )
+          ( cd /tmp && python -c "from executable_engineering import RootFinderOpen, RootFinderClosed, OptimizerOpen, OptimizerClosed, OptimizerGrad, init_model" )

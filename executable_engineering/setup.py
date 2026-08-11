@@ -5,12 +5,12 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name="Mint_NM",
+    name="executable_engineering",
     version="0.1.29",
     description="Tools for ENGPHYS 3NM4",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/themintlab/ExecutableEngineering/tree/main/Mint_NM",
+    url="https://github.com/themintlab/ExecutableEngineering/tree/main/executable_engineering",
     author="Michael Welland",
     packages=find_packages(),
     include_package_data=True,

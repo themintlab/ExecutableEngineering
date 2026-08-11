@@ -1,4 +1,4 @@
-name: Publish Mint_NM to PyPI
+name: Publish executable_engineering to PyPI
 
 on:
   release:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   pypi-publish:
-    name: Build and publish Mint_NM to PyPI
+    name: Build and publish executable_engineering to PyPI
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for PyPI Trusted Publishing
@@ -28,9 +28,9 @@ jobs:
           python -m pip install build
 
       - name: Build sdist and wheel
-        run: python -m build ./Mint_NM
+        run: python -m build ./executable_engineering
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: Mint_NM/dist/
+          packages-dir: executable_engineering/dist/
