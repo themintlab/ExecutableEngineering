@@ -27,7 +27,6 @@ project:
     - .ipynb_checkpoints
 
 site: 
-  logo: logo_color.png
   template: book-theme
   downloads:
     - pdf
@@ -35,5 +34,6 @@ site:
     - title: "Course AI"
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
   options:
+    logo: images/logo_color.png
     url: https://themintlab.github.io/ExecutableEngineering
     base_url: /ExecutableEngineering/

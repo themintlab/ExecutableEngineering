@@ -27,7 +27,7 @@ NB: The audio overview is AI generated from the notes. Although it is well groun
 
 This resource is being developed in part through the [McMaster University Open Educational Resources grant](https://mi.mcmaster.ca/oer-grant).
 
-![Meme](Meme.png)
+![Meme](images/Meme.png)
 
 
 ## Course Preamble & Timetable
