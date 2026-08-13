@@ -27,6 +27,7 @@ project:
     - .ipynb_checkpoints
 
 site: 
+  logo: logo_color.png
   template: book-theme
   downloads:
     - pdf
