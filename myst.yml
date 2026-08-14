@@ -35,5 +35,6 @@ site:
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
   options:
     logo: images/logo_color.png
+    favicon: images/logo_color.png
     url: https://themintlab.github.io/ExecutableEngineering
     base_url: /ExecutableEngineering/
