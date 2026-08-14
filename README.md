@@ -1,6 +1,6 @@
 # ExecutableEngineering
 
-Numerical methods course content for ENGPHYS 3NM4, built as a Jupyter Book 2.0 project using MyST as the rendering engine, with the in-repo `executable_engineering` package.
+Numerical methods textbook for undergraduate engineers, built as a Jupyter Book 2.0 project using MyST as the rendering engine, with the in-repo `executable_engineering` package.
 
 ## Repository layout
 

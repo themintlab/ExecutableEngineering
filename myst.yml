@@ -4,7 +4,7 @@ extends: toc.yml
 project:
   id: executableengineer
   title: Executable Engineering Interactive Numerical Methods in Python
-  description: Numerical methods course notebooks for ENGPHYS 3NM4.
+  description: Numerical methods textbook for undergraduate engineers.
   authors:
     - name: Michael J. Welland
       affiliations:

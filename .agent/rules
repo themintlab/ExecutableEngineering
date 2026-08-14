@@ -1,0 +1,18 @@
+# Agent Rules
+
+- **Stack**: Jupyter Book `==2.1.6` (MyST ecosystem). Config: `myst.yml`, `toc.yml`. No `_config.yml`/`_toc.yml`. Do NOT downgrade jupyter-book.
+- **Monorepo**: Contains book (`Chapters/`, `index.md`) & package (`executable_engineering`).
+- **Package**: PyPI & local name is `executable_engineering`. Local dev: `-e ./executable_engineering`. Colab: `pip install executable_engineering`. Build: `python -m build ./executable_engineering`.
+- **Interactivity**: Core philosophy: interactive numerical methods. PREFER `plotly` for all plotting. Use `ipywidgets`, `numpy`, `scipy`. (Use `matplotlib` only when static output is strictly required).
+- **Colab**: All pages must be loadable in Colab (for potential slideshow use).
+- **Git**: NEVER commit `_build/`, `.venv/`, `.ipynb_checkpoints/`, or `__pycache__/`.
+- **CI/CD**: GitHub Actions deploys to GitHub Pages from `main`. Do not commit built HTML files.
+- **License**: Content = CC-BY-NC-4.0. Code = MIT.
+
+### Course Context & Math
+- **Nature of Course**: Numerical Methods for undergraduate engineers. Focus on algorithmic thinking, computational efficiency, and executable code mirroring math.
+- **Math Formatting**: Use robust, standard MathJax (avoid custom macros).
+  - *Vectors*: `\mathbf{x}`. *Matrices*: `\mathbf{A}`. *Scalars*: `x`.
+  - *Derivatives/Operators*: Upright Roman (`\mathrm{d}x`).
+  - *Equations*: Number important equations using MyST syntax: `$$ math $$ (label)`.
+  - *Equation Arrays*: Use `\begin{aligned} ... \end{aligned}` inside `$$ ... $$` for robust multi-line alignment that remains compatible with MyST labels. Do not use the obsolete `eqnarray`.
