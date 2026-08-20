@@ -33,8 +33,6 @@ site:
   actions:
     - title: "Course AI"
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
-    - title: "Open in Colab"
-      url: https://colab.research.google.com/github/themintlab/ExecutableEngineering/
   options:
     logo: images/logo_color.png
     favicon: images/logo_color.png

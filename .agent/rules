@@ -5,7 +5,7 @@
 - **Package**: PyPI & local name is `executable_engineering`. Local dev: `-e ./executable_engineering`. Colab: `pip install executable_engineering`. Build: `python -m build ./executable_engineering`.
 - **Interactivity**: Core philosophy: interactive numerical methods. PREFER `plotly` for all plotting. Use `ipywidgets`, `numpy`, `scipy`. (Use `matplotlib` only when static output is strictly required).
 - **Cross-Environment Execution**: 
-  - All pages must include a Colab markdown badge at the very top of the notebook: `[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/themintlab/ExecutableEngineering/blob/main/...)`
+  - All pages must include a Colab markdown badge immediately below the main `# Title` in the first markdown cell: `[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/themintlab/ExecutableEngineering/blob/main/...)`
   - Do not assume packages are pre-installed in the cloud. Avoid heavy C-compiled dependencies unsupported by Pyodide/JupyterLite.
   - Every notebook requiring the course package must include this exact hidden setup cell (immediately following the Colab badge). This prevents breaking local editable installs while supporting Colab and JupyterLite (via micropip):
     ```python
