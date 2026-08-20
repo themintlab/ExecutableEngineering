@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="executable_engineering",
-    version="0.1.29",
+    version="0.1.30",
     description="Tools for ENGPHYS 3NM4",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,12 +20,13 @@ setup(
         "networkx",
         "ipywidgets",
         "IPython",
-        "pyppeteer",
-        "nbconvert",
         "scipy",
         "plotly",
         "pandas",
     ],
+    extras_require={
+        "docs": ["pyppeteer", "nbconvert"],
+    },
     python_requires=">=3.9",
     license="MIT",
     classifiers=[
