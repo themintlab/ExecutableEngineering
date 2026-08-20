@@ -4,8 +4,17 @@
 - **Monorepo**: Contains book (`Chapters/`, `index.md`) & package (`executable_engineering`).
 - **Package**: PyPI & local name is `executable_engineering`. Local dev: `-e ./executable_engineering`. Colab: `pip install executable_engineering`. Build: `python -m build ./executable_engineering`.
 - **Interactivity**: Core philosophy: interactive numerical methods. PREFER `plotly` for all plotting. Use `ipywidgets`, `numpy`, `scipy`. (Use `matplotlib` only when static output is strictly required).
-- **Colab**: All pages must be loadable in Colab (for potential slideshow use).
-- **Execution**: The launch / power button should be configured to use JupyterLite (in-browser execution).
+- **Cross-Environment Execution**: 
+  - All pages must be loadable in Colab (for potential slideshow use) and JupyterLite (in-browser execution via the launch button).
+  - Do not assume packages are pre-installed in the cloud. Avoid heavy C-compiled dependencies unsupported by Pyodide/JupyterLite.
+  - Every notebook requiring the course package must include this exact hidden setup cell at the top. This prevents breaking local editable installs while supporting Colab and JupyterLite (via micropip):
+    ```python
+    # | tags: [remove-cell]
+    try:
+        import executable_engineering
+    except ImportError:
+        %pip install -q executable_engineering
+    ```
 - **Git**: NEVER commit `_build/`, `.venv/`, `.ipynb_checkpoints/`, or `__pycache__/`.
 - **CI/CD**: GitHub Actions deploys to GitHub Pages from `main`. Do not commit built HTML files.
 - **License**: Content = CC-BY-NC-4.0. Code = MIT.
