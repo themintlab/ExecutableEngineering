@@ -30,7 +30,6 @@ setup(
     license="CC-BY-4.0",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: Creative Commons Attribution 4.0 International (CC BY 4.0)",
         "Operating System :: OS Independent",
     ],
 )
