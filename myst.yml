@@ -18,8 +18,7 @@ project:
 
   edit_url: null
   github: themintlab/ExecutableEngineering
-  jupyter:
-    lite: true
+  jupyter: true
   exports:
     - format: pdf
   exclude:
