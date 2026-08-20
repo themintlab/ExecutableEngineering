@@ -27,10 +27,10 @@ setup(
         "pandas",
     ],
     python_requires=">=3.9",
-    license="CC-BY-4.0",
+    license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: Creative Commons Attribution 4.0 International (CC BY 4.0)",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
 )
