@@ -3,8 +3,8 @@ version: 1
 extends: toc.yml
 project:
   id: executableengineer
-  title: Executable Engineering Interactive Numerical Methods in Python
-  short_title: ""
+  title: "Executable Engineering: Interactive Numerical Methods in Python"
+  short_title: Executable Engineering
   description: Numerical methods textbook for undergraduate engineers.
   authors:
     - name: Michael J. Welland
