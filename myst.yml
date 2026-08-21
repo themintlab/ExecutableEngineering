@@ -37,6 +37,7 @@ site:
     - title: "Course AI"
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
   options:
+    hide_authors: true
     logo: images/logo_color.png
     logo_text: ""
     favicon: images/logo_color.png
