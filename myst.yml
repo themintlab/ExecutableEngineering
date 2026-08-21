@@ -4,6 +4,7 @@ extends: toc.yml
 project:
   id: executableengineer
   title: Executable Engineering Interactive Numerical Methods in Python
+  short_title: Executable Engineering
   description: Numerical methods textbook for undergraduate engineers.
   authors:
     - name: Michael J. Welland
@@ -28,6 +29,8 @@ project:
 
 site: 
   template: book-theme
+  parts:
+    primary_sidebar_footer: ""
   downloads:
     - pdf
   actions:
@@ -35,6 +38,7 @@ site:
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
   options:
     logo: images/logo_color.png
+    logo_text: ""
     favicon: images/logo_color.png
     url: https://themintlab.github.io/ExecutableEngineering
     base_url: /ExecutableEngineering/
