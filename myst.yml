@@ -32,8 +32,7 @@ site:
   template: book-theme
   parts:
     primary_sidebar_footer: ""
-  downloads:
-    - pdf
+
   actions:
     - title: "Course AI"
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
