@@ -1,6 +1,8 @@
 
 # Welcome
 
+NB: This book is designed to be interactive in-browser. However, this technology is evolving and not always stable. While execution of the cells appears robust, editting is tempermental. As a fallback, a google Colab link is provided for each notebook which will launch a fully interactive python environment.
+
 This online textbook is associated with the course EngPhys 3NM4 at McMaster University. 
 
 Decompose into simpler problems. 
