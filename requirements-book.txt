@@ -1,5 +1,5 @@
 -e ./executable_engineering
-jupyter-book==2.1.6
+jupyter-book==2.1.5
 numpy
 matplotlib
 scipy
