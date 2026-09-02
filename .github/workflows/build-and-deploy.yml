@@ -36,10 +36,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-book.txt
+          pip install nbstripout
+
+      - name: Strip notebook outputs
+        run: |
+          find . -name "*.ipynb" -not -path "*/\.venv/*" -exec nbstripout {} +
 
       - name: Build the book
         run: |
           jupyter-book build --html
+
 
       - name: Upload Pages artifact
         # This action automatically tars the folder and preps it specifically for GitHub Pages deployment

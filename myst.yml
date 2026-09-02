@@ -27,6 +27,10 @@ project:
     - _build
     - .venv
     - .ipynb_checkpoints
+  
+  execute:
+    execute_notebooks: off
+
 
 site: 
   template: book-theme
