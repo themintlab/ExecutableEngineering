@@ -4,7 +4,7 @@ from .closedrootfinder_module import RootFinderClosed
 from .closedoptimization_module import OptimizerClosed
 from .openoptimization_module import OptimizerOpen
 from .gradientoptimization_module import OptimizerGrad
-from .numerical_error_module import python_internal_binary
+from .numerical_error_module import python_internal_binary, decimal_to_binary
 
 
 __all__ = [
@@ -31,4 +31,5 @@ __all__ = [
   "OptimizerOpen",
   "OptimizerGrad",
   "python_internal_binary",
+  "decimal_to_binary",
 ]

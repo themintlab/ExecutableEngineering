@@ -17,3 +17,24 @@ def python_internal_binary(num):
     fraction = binary_str[12:]   # 52 bits
     
     return f"{sign} {exponent} {fraction}"
+
+def decimal_to_binary(num, precision=20):
+    sign = "-" if num < 0 else ""
+    num = abs(num)
+    int_part = int(num)
+    frac = num - int_part
+    int_str = bin(int_part)[2:]
+    
+    frac_part = ""
+    for _ in range(precision):
+        if frac == 0: 
+            break
+        frac *= 2
+        bit = int(frac)
+        frac_part += str(bit)
+        frac -= bit
+        
+    if not frac_part:
+        frac_part = "0"
+        
+    return f"{sign}{int_str}.{frac_part}"
