@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 setup(
     name="executable_engineering",
     version="0.1.31",
-    description="Tools for ENGPHYS 3NM4",
+    description="Demonstrative tools for the Executable Engineering textbook",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/themintlab/ExecutableEngineering/tree/main/executable_engineering",
