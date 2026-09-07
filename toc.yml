@@ -2,6 +2,9 @@ version: 1
 project:
   toc:
     - file: "index.md"
+    - file: "chapters/about_the_book/textbook_design.md"
+      children:
+        - file: "chapters/about_the_book/acknowledgements.md"
     - file: "chapters/numerical_error/numerical_error.ipynb"
       children:
         - file: "chapters/numerical_error/roundoff_error_and_finite_precision_representations.ipynb"
