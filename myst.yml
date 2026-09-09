@@ -35,11 +35,7 @@ project:
 site: 
   template: book-theme
   parts:
-    primary_sidebar_footer: |
-      ```{image} images/exe_logo.png
-      :width: 80%
-      :align: center
-      ```
+    primary_sidebar_footer: ""
 
   actions:
     - title: "Course AI"

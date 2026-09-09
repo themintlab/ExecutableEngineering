@@ -1,3 +1,8 @@
+```{image} images/exe_logo.png
+:width: 40%
+:align: center
+```
+
 # Welcome to Executable Engineering - Interactive Numerical Methods in Python
 
 The core philosphy of this text it to experience first-hand the use of numerical methods to solve mathematical problems. Herein, we'll explore how complex problems are decomposed into simpler, easier problems that can be solved algorithmically. We will discuss the fundametal principles used in modern open-source tools and how these tools can be leveraged efficiently and effectively.
