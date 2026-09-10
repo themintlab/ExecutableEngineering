@@ -45,7 +45,7 @@ site:
       url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
   options:
     hide_authors: true
-    logo: images/exe_logo.png
+    #logo: images/exe_logo.png
     logo_text: ""
     favicon: images/favicon.ico
     url: https://themintlab.github.io/ExecutableEngineering
