@@ -23,6 +23,8 @@ project:
     binder: true
   exports:
     - format: pdf
+      article: index.md
+      output: _build/exports/book.pdf
   exclude:
     - _build
     - .venv
