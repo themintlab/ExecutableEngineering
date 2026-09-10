@@ -23,7 +23,8 @@ project:
     binder: true
   exports:
     - format: pdf
-      article: index.md
+      template: plain_latex_book
+      toc: toc.yml
       output: _build/exports/book.pdf
   exclude:
     - _build

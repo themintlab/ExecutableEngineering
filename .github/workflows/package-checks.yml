@@ -1,4 +1,4 @@
-name: executable_engineering checks
+name: executable_engineering package checks
 
 on:
   pull_request:
