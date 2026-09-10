@@ -17,10 +17,10 @@ Associate Professor, Engineering Physics, McMaster University
 With support from the [McMaster Open Education Resources (OER) Grant Program](https://milestones.mcmaster.ca/grant-program/)
 
 ## Contributors
-### Matteo Arnone, [GitHub](https://github.com/)
+### Matteo Arnone, [GitHub](https://github.com/MatteoArnone)
 
-### Malik Locs
+### Malik Locs, [GitHub](https://github.com/MalikLocs)
 
-### Joel Matthews
+### Joel Matthews, [GitHub](https://github.com/joelmathewsssss)
 
 
