@@ -39,7 +39,9 @@ jobs:
 
       - name: Build the book
         run: |
-          jupyter-book build --html
+          jupyter-book build --all
+          mkdir -p _build/html/_static
+          cp _build/exports/*.pdf _build/html/_static/book.pdf
 
 
       - name: Upload Pages artifact
