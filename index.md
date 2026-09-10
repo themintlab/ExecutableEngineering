@@ -12,7 +12,7 @@ The core philosphy of this text it to experience first-hand the use of numerical
 
 ## Tools and Resources
 
-* [PDF of the full book](book.pdf)
+* [PDF of the full book](/ExecutableEngineering/book.pdf)
 * [Youtube channel with lectures](https://www.youtube.com/@McMaster_EngPhys3NM4)
 * [Virtual Tutor](https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98)
 * [Associated PyPI Package](https://pypi.org/project/executable-engineering/)

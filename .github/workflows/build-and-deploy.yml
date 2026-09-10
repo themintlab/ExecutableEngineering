@@ -1,6 +1,8 @@
 name: Build and Deploy Jupyter Book
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_run:
@@ -20,7 +22,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    if: github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     # This environment variable fixes the BASE_URL issue!
     env:
@@ -55,6 +57,12 @@ jobs:
           gh run download "${RUN_ID}" --repo "${GITHUB_REPOSITORY}" --name book-pdf --dir _build/html
           test -f _build/html/book.pdf
 
+      - name: Download latest released PDF
+        if: github.event_name == 'push'
+        run: |
+          curl -fsSL "https://github.com/${GITHUB_REPOSITORY}/releases/download/latest/book.pdf" -o _build/html/book.pdf
+          test -f _build/html/book.pdf
+
 
       - name: Upload Pages artifact
         # This action automatically tars the folder and preps it specifically for GitHub Pages deployment
@@ -65,7 +73,7 @@ jobs:
   deploy:
     # This job waits for the build job to finish
     needs: build
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     environment:
       name: github-pages
