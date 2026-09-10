@@ -37,9 +37,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-book.txt
 
+      - name: Install PDF build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-xetex texlive-latex-extra texlive-fonts-recommended
+
       - name: Build the book
         run: |
           jupyter-book build --html
+          jupyter-book build --pdf
+          cp _build/exports/book.pdf _build/html/book.pdf
 
 
       - name: Upload Pages artifact
