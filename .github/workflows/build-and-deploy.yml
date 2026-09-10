@@ -5,13 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_run:
-    workflows: ["Build and Release PDF"]
-    types: [completed]
-    branches: [main]
 
 permissions:
-  actions: read
   contents: read
   pages: write
   id-token: write
@@ -22,21 +17,13 @@ concurrency:
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     # This environment variable fixes the BASE_URL issue!
     env:
       BASE_URL: /${{ github.event.repository.name }}
     steps:
       - name: Checkout repository
-        if: github.event_name != 'workflow_run'
         uses: actions/checkout@v4
-
-      - name: Checkout main branch
-        if: github.event_name == 'workflow_run'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -53,24 +40,7 @@ jobs:
         run: |
           jupyter-book build --html
 
-      - name: Install GitHub CLI
-        if: github.event_name == 'workflow_run'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
-
-      - name: Download PDF from triggering workflow run
-        if: github.event_name == 'workflow_run'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
-        run: |
-          gh run download "${RUN_ID}" --repo "${GITHUB_REPOSITORY}" --name book-pdf --dir _build/html
-          mv _build/html/book-pdf/book.pdf _build/html/book.pdf
-          test -f _build/html/book.pdf
-
       - name: Upload Pages artifact
-        if: github.event_name == 'workflow_run'
         # This action automatically tars the folder and preps it specifically for GitHub Pages deployment
         uses: actions/upload-pages-artifact@v3
         with:
@@ -79,7 +49,7 @@ jobs:
   deploy:
     # This job waits for the build job to finish
     needs: build
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
