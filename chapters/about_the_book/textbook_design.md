@@ -34,7 +34,7 @@ Studies consistently show the benefits of experiential learning. This text lever
 Executing code requires a computing environment known as a **kernel**. Your browser acts as the front-end, while all computations occur in the backend kernel.
 
 ### In-textbook execution
-On the top-right hand side of the page, you should see a 'power button' ![alt text](../images/power_button.png). Clicking it will launch a jupyter kernel and enable execution. The top of the page will now have a bar that performs:
+On the top-right hand side of the page, you should see a 'power button' ![alt text](../../images/power_button.png). Clicking it will launch a jupyter kernel and enable execution. The top of the page will now have a bar that performs:
 
 - Run all cells
 - Reset notebook and restart kernel
