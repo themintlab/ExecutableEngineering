@@ -29,11 +29,15 @@ jobs:
       - name: Install PDF build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y latexmk texlive-xetex texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y latexmk qpdf texlive-xetex texlive-latex-extra texlive-fonts-recommended
 
       - name: Build the PDF
         run: |
           jupyter-book build --pdf
+
+      - name: Validate generated PDF
+        run: |
+          qpdf --check _build/exports/book.pdf
 
       - name: Upload PDF to Release
         uses: softprops/action-gh-release@v2
