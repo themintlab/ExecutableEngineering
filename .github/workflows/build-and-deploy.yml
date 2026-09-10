@@ -48,12 +48,12 @@ jobs:
 
       - name: Download PDF from triggering workflow run
         if: github.event_name == 'workflow_run'
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
-          name: book-pdf
-          path: _build/html
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          gh run download "${RUN_ID}" --repo "${GITHUB_REPOSITORY}" --name book-pdf --dir _build/html
+          test -f _build/html/book.pdf
 
 
       - name: Upload Pages artifact
