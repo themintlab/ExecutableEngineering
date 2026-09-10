@@ -29,9 +29,14 @@ jobs:
       BASE_URL: /${{ github.event.repository.name }}
     steps:
       - name: Checkout repository
+        if: github.event_name != 'workflow_run'
+        uses: actions/checkout@v4
+
+      - name: Checkout main branch
+        if: github.event_name == 'workflow_run'
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && 'refs/heads/main' || github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          ref: refs/heads/main
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -57,14 +62,8 @@ jobs:
           gh run download "${RUN_ID}" --repo "${GITHUB_REPOSITORY}" --name book-pdf --dir _build/html
           test -f _build/html/book.pdf
 
-      - name: Download latest released PDF
-        if: github.event_name == 'push'
-        run: |
-          curl -fsSL "https://github.com/${GITHUB_REPOSITORY}/releases/download/latest/book.pdf" -o _build/html/book.pdf
-          test -f _build/html/book.pdf
-
-
       - name: Upload Pages artifact
+        if: github.event_name == 'workflow_run'
         # This action automatically tars the folder and preps it specifically for GitHub Pages deployment
         uses: actions/upload-pages-artifact@v3
         with:
@@ -73,7 +72,7 @@ jobs:
   deploy:
     # This job waits for the build job to finish
     needs: build
-    if: github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
