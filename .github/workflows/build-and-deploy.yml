@@ -6,9 +6,10 @@ on:
   workflow_run:
     workflows: ["Build and Release PDF"]
     types: [completed]
-  workflow_dispatch:
+    branches: [main]
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -19,7 +20,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     # This environment variable fixes the BASE_URL issue!
     env:
@@ -28,7 +29,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.event_name == 'workflow_run' && 'refs/heads/main' || github.sha }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -45,10 +46,14 @@ jobs:
         run: |
           jupyter-book build --html
 
-      - name: Download latest released PDF
-        if: github.event_name != 'pull_request'
-        run: |
-          curl -L https://github.com/${{ github.repository }}/releases/download/latest/book.pdf -o _build/html/book.pdf
+      - name: Download PDF from triggering workflow run
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          name: book-pdf
+          path: _build/html
 
 
       - name: Upload Pages artifact
@@ -60,7 +65,7 @@ jobs:
   deploy:
     # This job waits for the build job to finish
     needs: build
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

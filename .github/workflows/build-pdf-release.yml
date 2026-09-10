@@ -35,6 +35,12 @@ jobs:
         run: |
           jupyter-book build --pdf
 
+      - name: Upload PDF workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: book-pdf
+          path: _build/exports/book.pdf
+
       - name: Upload PDF to Release
         uses: softprops/action-gh-release@v2
         with:
