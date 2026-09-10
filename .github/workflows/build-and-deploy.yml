@@ -60,6 +60,7 @@ jobs:
           RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
           gh run download "${RUN_ID}" --repo "${GITHUB_REPOSITORY}" --name book-pdf --dir _build/html
+          mv _build/html/book-pdf/book.pdf _build/html/book.pdf
           test -f _build/html/book.pdf
 
       - name: Upload Pages artifact
