@@ -4,6 +4,7 @@ project:
     - file: "index.md"
     - file: "chapters/about_the_book/textbook_design.md"
       children:
+        - file: "chapters/about_the_book/pacing_and_timetable.md"
         - file: "chapters/about_the_book/acknowledgements.md"
     - file: "chapters/numerical_error/numerical_error.ipynb"
       children:
