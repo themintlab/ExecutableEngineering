@@ -33,7 +33,7 @@ jobs:
 
       - name: Build the PDF
         run: |
-          jupyter-book build --pdf
+          jupyter-book build --pdf --execute
 
       - name: Validate generated PDF
         run: |
