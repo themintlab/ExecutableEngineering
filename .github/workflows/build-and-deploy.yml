@@ -63,9 +63,10 @@ jobs:
         if: github.event_name == 'workflow_run'
         env:
           GH_TOKEN: ${{ github.token }}
+          HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
           RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
-          gh run download "${RUN_ID}" --repo "${GITHUB_REPOSITORY}" --name book-pdf --dir _build/html
+          gh run download "${RUN_ID}" --repo "${HEAD_REPOSITORY}" --name book-pdf --dir _build/html
           mv _build/html/book-pdf/book.pdf _build/html/book.pdf
           test -f _build/html/book.pdf
 
