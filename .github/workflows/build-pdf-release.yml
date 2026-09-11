@@ -32,6 +32,8 @@ jobs:
           sudo apt-get install -y imagemagick latexmk qpdf texlive-xetex texlive-latex-extra texlive-fonts-recommended
 
       - name: Build the PDF
+        env:
+          PLOTLY_RENDERER: png
         run: |
           jupyter-book build --pdf --execute
 

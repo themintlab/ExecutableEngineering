@@ -6,5 +6,6 @@ scipy
 sympy
 ipywidgets
 plotly
+kaleido
 networkx
 pandas
