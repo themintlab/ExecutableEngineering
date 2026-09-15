@@ -19,8 +19,8 @@ project:
             - file: "chapters/linear_systems/matrix_properties/solvability.ipynb"
             - file: "chapters/linear_systems/matrix_properties/norms.ipynb"
             - file: "chapters/linear_systems/matrix_properties/conditioning.ipynb"
-            - file: "chapters/linear_systems/matrix_properties/complexity.ipynb"
             - file: "chapters/linear_systems/matrix_properties/matrix_types_and_sparsity.ipynb"
+        - file: "chapters/linear_systems/complexity.ipynb"
         - file: "chapters/linear_systems/direct_methods/direct_methods.ipynb"
           children: 
             - file: "chapters/linear_systems/direct_methods/gaussian_elimination.ipynb"
