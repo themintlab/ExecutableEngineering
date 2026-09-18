@@ -33,8 +33,8 @@ description: "Description of the formatting rule"
 - **Math Formatting**: Use robust, standard MathJax (avoid custom macros).
   - *Vectors*: `\mathbf{x}`. *Matrices*: `\mathbf{A}`. *Scalars*: `x`.
   - *Derivatives/Operators*: Upright Roman (`\mathrm{d}x`).
-  - *Equations*: Equations should be numbered using MyST syntax: `$$ math $$ (label)`. Ensure they have horizontal scroll if at all possible.
-  - *Equation Arrays*: Use `\begin{aligned} ... \end{aligned}` inside `$$ ... $$` for robust multi-line alignment that remains compatible with MyST labels. Do not use the obsolete `eqnarray`.
+  - *Equations*: DO NOT use MyST equation numbering `(label)`. Do not number equations unless specifically requested. Ensure they have horizontal scroll if at all possible.
+  - *Equation Arrays*: Use `\begin{aligned} ... \end{aligned}` inside `$$ ... $$` for robust multi-line alignment. Do not use the obsolete `eqnarray`.
   - *File Naming*: All files and directories within the book content (e.g., inside Chapters/) must be named using `snake_case` (all lowercase, no spaces). This ensures maximum compatibility with command-line tools and URLs.
   - *Page Titles*: Every Markdown or Jupyter Notebook file must contain exactly one top-level header (e.g., `# Title`) at the very top of the document. Jupyter Book uses this H1 header for the sidebar index and page title.
 
