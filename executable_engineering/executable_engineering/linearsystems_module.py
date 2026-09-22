@@ -430,13 +430,44 @@ class IterationTracker:
     """
     A clean callback tracker for native SciPy solvers (cg, gmres, etc.).
     """
-    def __init__(self, x0=None):
+    def __init__(self, x0=None, A=None, b=None, print_residual=False):
         import numpy as np
         if x0 is not None:
             self.iterations = [np.array(x0).copy()]
         else:
             self.iterations = []
+            
+        self.residuals = []
+        self.A = A
+        self.b = b
+        self.print_residual = print_residual
+        self.step = 0
+        
+        if A is not None and b is not None and x0 is not None:
+            x_arr = np.array(x0)
+            res = np.linalg.norm(A @ x_arr - b)
+            self.residuals.append(res)
+            if self.print_residual:
+                guess_str = np.array2string(x_arr, precision=4, separator=', ', suppress_small=True)
+                print(f"Step {self.step}: Guess = {guess_str}, Residual = {res:.4e}")
 
     def __call__(self, xk):
         import numpy as np
-        self.iterations.append(np.array(xk).copy())
+        self.step += 1
+        
+        # Check if xk is a scalar (i.e. callback_type='pr_norm' in GMRES)
+        if np.isscalar(xk) or (isinstance(xk, np.ndarray) and xk.size == 1):
+            res = float(np.squeeze(xk))
+            self.residuals.append(res)
+            if self.print_residual:
+                print(f"Step {self.step}: Residual = {res:.4e} (Guess vector xk not computed by SciPy GMRES)")
+        else:
+            # xk is a vector (i.e. from CG)
+            x = np.array(xk).copy()
+            self.iterations.append(x)
+            if self.A is not None and self.b is not None:
+                res = np.linalg.norm(self.A @ x - self.b)
+                self.residuals.append(res)
+                if self.print_residual:
+                    guess_str = np.array2string(x, precision=4, separator=', ', suppress_small=True)
+                    print(f"Step {self.step}: Guess = {guess_str}, Residual = {res:.4e}")
