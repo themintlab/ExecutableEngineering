@@ -471,3 +471,64 @@ class IterationTracker:
                 if self.print_residual:
                     guess_str = np.array2string(x, precision=4, separator=', ', suppress_small=True)
                     print(f"Step {self.step}: Guess = {guess_str}, Residual = {res:.4e}")
+
+
+def discretise_poisson(N, Q):
+    """Generate the matrix and rhs associated with the discrete Poisson operator."""
+    import numpy as np
+    from scipy.sparse import coo_matrix
+
+    nelements = 5 * N**2 - 16 * N + 16
+
+    row_ind = np.empty(nelements, dtype=np.float64)
+    col_ind = np.empty(nelements, dtype=np.float64)
+    data = np.empty(nelements, dtype=np.float64)
+
+    f = np.empty(N * N, dtype=np.float64)
+
+    count = 0
+    for j in range(N):
+        for i in range(N):
+            if i == 0 or i == N - 1 or j == 0 or j == N - 1:
+                row_ind[count] = col_ind[count] = j * N + i
+                data[count] =  1
+                f[j * N + i] = 0
+                count += 1
+
+            else:
+                row_ind[count : count + 5] = j * N + i
+                col_ind[count] = j * N + i
+                col_ind[count + 1] = j * N + i + 1
+                col_ind[count + 2] = j * N + i - 1
+                col_ind[count + 3] = (j + 1) * N + i
+                col_ind[count + 4] = (j - 1) * N + i
+
+                data[count] = 4 * (N - 1)**2
+                data[count + 1 : count + 5] = - (N - 1)**2
+                f[j * N + i] = Q
+
+                count += 5
+
+    return coo_matrix((data, (row_ind, col_ind)), shape=(N**2, N**2)).tocsr(), f
+
+def spai(A, m):
+    """Perform m step of the SPAI iteration."""
+    import numpy as np
+    from scipy.sparse import identity
+    from scipy.sparse.linalg import onenormest
+
+    n = A.shape[0]
+
+    ident = identity(n, format='csr')
+    alpha = 2 / onenormest(A @ A.T)
+    M = alpha * A
+
+    for index in range(m):
+        C = A @ M
+        G = ident - C
+        AG = A @ G
+        trace = (G.T @ AG).diagonal().sum()
+        alpha = trace / np.linalg.norm(AG.data)**2
+        M = M + alpha * G
+
+    return M

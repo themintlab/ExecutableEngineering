@@ -5,9 +5,11 @@ from .closedoptimization_module import OptimizerClosed
 from .openoptimization_module import OptimizerOpen
 from .gradientoptimization_module import OptimizerGrad
 from .numerical_error_module import python_internal_binary, decimal_to_binary
-from .linearsystems_module import visual_solve_2d, visualize_conditioning, visualize_matrix_norms, jacobi_step, gauss_seidel_step, sor_step, visualize_convergence_2d, create_diagonally_dominant_matrix, iter_solve, steepest_descent, conjugate_gradient, IterationTracker
+from .linearsystems_module import visual_solve_2d, visualize_conditioning, visualize_matrix_norms, jacobi_step, gauss_seidel_step, sor_step, visualize_convergence_2d, create_diagonally_dominant_matrix, iter_solve, steepest_descent, conjugate_gradient, IterationTracker, discretise_poisson, spai
 
 __all__ = [
+  "discretise_poisson",
+  "spai",
   "visual_solve_2d",
   "visualize_conditioning",
   "visualize_matrix_norms",
