@@ -138,20 +138,26 @@ class RootFinderOpen:
         return HTML(anim.to_jshtml())
 
     def show_toggle_open(self, interval_ms=750):
-        newton_anim_html = self._make_animation_open('Newton', interval_ms)
-        secant_anim_html = self._make_animation_open('Secant', interval_ms)
+            newton_anim_html = self._make_animation_open('Newton', interval_ms)
+            secant_anim_html = self._make_animation_open('Secant', interval_ms)
 
-        if newton_anim_html is None or secant_anim_html is None:
-            print("Cannot create animations. Check function definition or initial points (x0, x1).")
-            return
+            if newton_anim_html is None or secant_anim_html is None:
+                print("Cannot create animations. Check function definition or initial points (x0, x1).")
+                return
 
-        newton_content = widgets.HTML(value=newton_anim_html.data)
-        secant_content = widgets.HTML(value=secant_anim_html.data)
+            newton_out = widgets.Output()
+            secant_out = widgets.Output()
 
-        tab_container = widgets.Tab()
-        tab_container.children = [newton_content, secant_content]
+            with newton_out:
+                display(newton_anim_html)
+                
+            with secant_out:
+                display(secant_anim_html)
 
-        tab_container.set_title(0, 'Newton')
-        tab_container.set_title(1, 'Secant')
+            tab_container = widgets.Tab()
+            tab_container.children = [newton_out, secant_out]
 
-        display(tab_container)
+            tab_container.set_title(0, 'Newton')
+            tab_container.set_title(1, 'Secant')
+
+            display(tab_container)
