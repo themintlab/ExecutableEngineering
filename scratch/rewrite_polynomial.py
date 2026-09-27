@@ -1,0 +1,477 @@
+import json
+
+path = '/home/wellandm/Code/ExecutableEngineering/chapters/interpolation_and_curve_fitting/interpolation/polynomial_interpolation.ipynb'
+
+cells = []
+
+# Cell 0: Title
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "# Polynomial Interpolation\n",
+        "\n",
+        "[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/themintlab/ExecutableEngineering/blob/main/chapters/interpolation_and_curve_fitting/interpolation/polynomial_interpolation.ipynb)"
+    ]
+})
+
+# Cell 1: Setup
+cells.append({
+    "cell_type": "code",
+    "execution_count": None,
+    "metadata": {},
+    "outputs": [],
+    "source": [
+        "import numpy as np\n",
+        "import plotly.graph_objects as go\n",
+        "import sympy as sp\n",
+        "from numpy.polynomial import legendre\n",
+        "\n",
+        "try:\n",
+        "    import executable_engineering as exe\n",
+        "except ImportError:\n",
+        "    %pip install -q executable_engineering\n",
+        "    import executable_engineering as exe\n"
+    ]
+})
+
+# Cell 2: Intro
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Introduction\n",
+        "\n",
+        "Polynomial interpolation is a straightforward approach to interpolation. \n",
+        "\n",
+        "Three methods to obtain polynomials are established here. For a given set of data, they all *must* result in the same polynomial. The difference is the means by which they are achieved, which translates to the ways that they are used. \n",
+        "\n",
+        "The polynomial methods discussed here rely on a core property of linear algebra:\n",
+        "\n",
+        "**It is always possible to construct a *unique* polynomial of degree $n$ that passes exactly through $n + 1$ distinct data points.**"
+    ]
+})
+
+# Cell 3: Lagrange concept
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Lagrange Polynomial Interpolation\n",
+        "\n",
+        "Lagrange polynomial interpolation constructs the polynomial as,\n",
+        "\n",
+        "$$\n",
+        "y(x) = \\sum_{i = 1}^n y_i P_i(x)\n",
+        "$$\n",
+        "\n",
+        "which is a weighted sum of the Lagrange basis polynomials, $P_i(x)$,\n",
+        "\n",
+        "$$\n",
+        "P_i(x) = \\prod_{j = 1, j\\ne i}^n\\frac{x - x_j}{x_i - x_j}.\n",
+        "$$\n",
+        "\n",
+        "N.B.: $\\prod$ means *the product of*, like $\\sum$ means *the sum of*."
+    ]
+})
+
+# Cell 4: Lagrange basis
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Lagrange Basis Polynomials\n",
+        "\n",
+        "By construction,\n",
+        "- $P_i(x_j) = 1$ when $i = j$\n",
+        "- $P_i(x_j) = 0$ when $i \\ne j$.\n",
+        "\n",
+        "Use the data:\n",
+        "*x = [0, .5, 2]*\n",
+        "*y = [1, 3, 2]*\n",
+        "\n",
+        "$$\n",
+        "\\begin{aligned}\n",
+        "P_1(x) &= \\frac{(x - x_2)(x - x_3)}{(x_1-x_2)(x_1-x_3)} = \\frac{(x - 1)(x - 2)}{(0-1)(0-2)} = \\frac{1}{2}(x^2 - 3x + 2),\\\\\n",
+        "P_2(x) &= \\frac{(x - x_1)(x - x_3)}{(x_2-x_1)(x_2-x_3)} = \\frac{(x - 0)(x - 2)}{(1-0)(1-2)} = -x^2 + 2x,\\\\\n",
+        "P_3(x) &= \\frac{(x - x_1)(x - x_2)}{(x_3-x_1)(x_3-x_2)} = \\frac{(x - 0)(x - 1)}{(2-0)(2-1)} = \\frac{1}{2}(x^2 - x).\n",
+        "\\end{aligned}\n",
+        "$$\n",
+        "\n",
+        "Let's plot each polynomial and verify the property that $P_i(x_j) = 1$ when $i = j$ and $P_i(x_j) = 0$ when $i \\ne j$."
+    ]
+})
+
+# Cell 5: Lagrange basis code
+cells.append({
+    "cell_type": "code",
+    "execution_count": None,
+    "metadata": {},
+    "outputs": [],
+    "source": [
+        "# Data points\n",
+        "x = [0, .5, 2]\n",
+        "y = [1, 3, 2]\n",
+        "\n",
+        "# Calculate the Lagrange basis polynomials\n",
+        "n = len(x)\n",
+        "P = []\n",
+        "for i in range(n):\n",
+        "  numerator = 1\n",
+        "  denominator = 1\n",
+        "  for j in range(n):\n",
+        "    if i != j:\n",
+        "      numerator = np.polymul(numerator, np.poly1d([1, -x[j]]))\n",
+        "      denominator = denominator * (x[i] - x[j])\n",
+        "  P.append(np.poly1d(np.polydiv(numerator, denominator)[0]))\n",
+        "\n",
+        "# Plot the Lagrange basis polynomials\n",
+        "x_plot = np.linspace(-1, 3, 100)\n",
+        "\n",
+        "fig = go.Figure()\n",
+        "for i in range(n):\n",
+        "    y_plot = P[i](x_plot)\n",
+        "    fig.add_trace(go.Scatter(x=x_plot, y=y_plot, mode='lines', name=f'P_{i+1}(x)'))\n",
+        "\n",
+        "fig.add_trace(go.Scatter(x=x, y=[1] * len(x), mode='markers', marker=dict(color='black'), showlegend=False))\n",
+        "fig.add_trace(go.Scatter(x=x, y=[0] * len(x), mode='markers', marker=dict(color='red'), showlegend=False))\n",
+        "\n",
+        "fig.update_layout(title='Lagrange Basis Polynomials', xaxis_title='x', yaxis_title='P_i(x)')\n",
+        "fig.show()\n"
+    ]
+})
+
+# Cell 6: Assembling the polynomial
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Assembling the Polynomial\n",
+        "\n",
+        "Since $P_{i\\ne j}=0$, and $P_{i = j}=1$, it is trivial to see that for $ y(x) = \\sum_{i = 1}^n \\omega_i P_i(x) $, the coefficients are simply:\n",
+        "\n",
+        "$$\n",
+        "y(x) = \\sum_{i = 1}^n y_i P_i(x)\n",
+        "$$"
+    ]
+})
+
+# Cell 7: Assembling code
+cells.append({
+    "cell_type": "code",
+    "execution_count": None,
+    "metadata": {},
+    "outputs": [],
+    "source": [
+        "# Construct the Lagrange polynomial\n",
+        "L = np.poly1d(0)\n",
+        "for i in range(n):\n",
+        "  L = L + y[i] * P[i]\n",
+        "\n",
+        "# Plot the Lagrange polynomial\n",
+        "y_plot = L(x_plot)\n",
+        "\n",
+        "fig = go.Figure()\n",
+        "fig.add_trace(go.Scatter(x=x_plot, y=y_plot, mode='lines', name='L(x)'))\n",
+        "fig.add_trace(go.Scatter(x=x, y=y, mode='markers', name='Data points', marker=dict(color='red')))\n",
+        "fig.update_layout(title='Lagrange Polynomial Interpolation', xaxis_title='x', yaxis_title='L(x)')\n",
+        "fig.show()\n"
+    ]
+})
+
+# Cell 8: Analysis
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Analysis\n",
+        "\n",
+        "We can observe some notes:\n",
+        "* For $n$ data points we necessarily produce a unique polynominal that crosses each one.\n",
+        "* If we have two measurements at the same input, $x_i = x_j$, $P_i =\\sim \\frac{1}{0}$ which is undefined *unless* $x_i=x_j$ and $y_i=y_j$ in which case the data pair is redundant and can be removed.\n",
+        "* Each evalulation of $P(x)$ involves $n-1$ products, and $L(x)$ is the sum of $n$ bases, therefore evaluation is $O(n^2)$\n",
+        "* Adding new data means restarting the compuation.\n"
+    ]
+})
+
+# Cell 9: Analysis code
+cells.append({
+    "cell_type": "code",
+    "execution_count": None,
+    "metadata": {},
+    "outputs": [],
+    "source": [
+        "x = [0, 1, 2, 3, 4]\n",
+        "y = [1, 3, 2, 5, 7]\n",
+        "\n",
+        "n = len(x)\n",
+        "x_sym = sp.Symbol('x')\n",
+        "\n",
+        "L = 0\n",
+        "for i in range(n):\n",
+        "    term = y[i]\n",
+        "    for j in range(n):\n",
+        "        if i != j:\n",
+        "            term *= (x_sym - x[j]) / (x[i] - x[j])\n",
+        "    L += term\n",
+        "\n",
+        "print(L)\n",
+        "\n",
+        "print('which is an ugly way of writing out:')\n",
+        "print(L.simplify())\n"
+    ]
+})
+
+# Cell 10: Error
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Error in Interpolation\n",
+        "\n",
+        "It can be shown that the error in the interpolation is,\n",
+        "\n",
+        "$$\n",
+        "y^{true}(x)-y(x) = \\frac{[x-x_1][x-x_2][x-x_3]...[x-x_n]}{(n+1)!} f^{(n+1)}(\\xi)\n",
+        "$$\n",
+        "\n",
+        "where $\\xi$ is in the interval $(x_0, x_n)$.\n",
+        "\n",
+        "Since for $n$ datapoints there is a unique polynomial of degree $n-1$, which can be expressed as a Lagrange polynomial, **this analysis is universal to all polynomial interpolations!**. The main takeaway is that:\n",
+        "\n",
+        "*The further a data point is from $x$, the more it contributes to the error.*"
+    ]
+})
+
+# Cell 11: Barycentric
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Barycentric Lagrange Interpolation\n",
+        "\n",
+        "Let's try to improve the performance of Lagrange Interpolation. Let:\n",
+        "\n",
+        "$$\n",
+        "\\Omega(x) = \\prod_{j = 1}^n [x - x_j]\n",
+        "$$\n",
+        "\n",
+        "and the *barycentric weights*, $w_i$:\n",
+        "\n",
+        "$$\n",
+        "w_i = \\prod_{j = 1, j\\ne i}^n\\frac{1}{x_i - x_j}.\n",
+        "$$\n",
+        "\n",
+        "and write:\n",
+        "\n",
+        "$$\n",
+        "P_i(x) = \\Omega(x) \\frac{w_i}{x - x_j}.\n",
+        "$$\n",
+        "\n",
+        "and factor the $\\Omega$ out of the sum:\n",
+        "\n",
+        "$$\n",
+        "y(x) = \\Omega(x) \\sum_{j = 1}^n \\frac{w_i}{x - x_j} y_i.\n",
+        "$$\n",
+        "\n",
+        "which is $O(n)$ for evaluation. Calculation of $w_i$ can be formulated recursively, such that each $w_i$ takes $O(n)$ and the full takes $O(n^2)$ with updates n.\n",
+        "\n",
+        "NB: The weights depend only on $x_i$, not $y_i$ - this means if we are measuring multiple functions on the same spacing, we can reuse the weights, leading to substantial computaitonal savings. The benefit being that the calucation of the $\\omega_i$, $O(n^2)$ is precomputed.\n",
+        "\n",
+        "We can write one more form which is commonly implemented. Let's add one more piece of data:\n",
+        "\n",
+        "$$ 1 = \\sum_{j=0}^n P_j = \\Omega(x) \\sum_{j=0}^n \\frac{w_j}{x-x_j}$$\n",
+        "\n",
+        "then we divide the previous function and write:\n",
+        "\n",
+        "$$\n",
+        "y(x) = \\frac{\\sum_{j = 0}^n \\frac{w_i}{x - x_j} y_i}{\\sum_{j = 0}^n \\frac{w_i}{x - x_j}}\n",
+        "$$\n",
+        "\n",
+        "where we have cancelled $\\Omega$! Besides elegance, this avoids an issue when evaluating $x\\rightarrow x_i$ where roundoff can cause subtractive cancellation. Since the term appears in the numerator and denominator this cancels out!"
+    ]
+})
+
+# Cell 12: Newton's
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Newton's Divided Difference Method\n",
+        "\n",
+        "Newton's polynomial interpolation has the form:\n",
+        "\n",
+        "$$ y(x) = a_0 + a_1[x-x_0] + a_2 [x-x_0][x-x_1] + \\dots + a_n[x-x_0][x-x_1]\\dots[x-x_n]$$\n",
+        "\n",
+        "which has the advantage of $O(n)$ evaluations due to recursion and nested multiplication. E.g. for 4 terms,\n",
+        "\n",
+        "$$ y(x) = a_0 + [x-x_0] \\bigg[a_1  + [x-x_1] \\big[a_2  + [x-x_2] a_3 \\big] \\bigg] $$\n",
+        "\n",
+        "Newton's method is also known as the **divided differences**\n",
+        "\n",
+        "> This algorithm was used to calculate function tables like logarithms and trignometry functions. It was then the basis for the *difference engine*, an early mechanical calculator.\n",
+        "\n",
+        "Let's generalize this. Define the two-argument function:\n",
+        "\n",
+        "$$ y[x_1, x_0] = \\frac{y_1 - y_0}{x_1 - x_0}$$\n",
+        "\n",
+        "and the ternary recursively:\n",
+        "\n",
+        "$$ y[x_2, x_1, x_0] = \\frac{\\frac{y_2 - y_1}{x_2 - x_1} - \\frac{y_1 - y_0}{x_1 - x_0}}{x_2 - x_0} = \\frac{y[x_2,x_1] - y[x_1,x_0]}{x_2-x_1}$$\n",
+        "\n",
+        "The n-ary function is:\n",
+        "\n",
+        "$$ y[x_k, x_{k-1}, \\dots, x_{1}, x_0] = \\frac{y[x_k, x_{k-1}, \\dots, x_{2}, x_2] - y[x_{k-1}, x_{k-2}, \\dots, x_{1}, x_0]}{x_k-x_0}$$\n",
+        "\n",
+        "We can visualize this is in a *tableau*:\n",
+        "$$\n",
+        "\\begin{aligned}\n",
+        "\\begin{array}{cccccc}\n",
+        "x_0 & y_0 \\\\\n",
+        "    &     & y[x_1,x_0] \\\\\n",
+        "x_1 & y_1 &             & y[x_2, x_1,x_0]\\\\\n",
+        "    &     & y[x_2,x_1]  &              & y[x_3, x_2, x_1,x_0]\\\\\n",
+        "x_2 & y_2 &             & y[x_3, x_2,x_1] &             & y[x_4, x_3, x_2, x_1,x_0]\\\\\n",
+        "    &     & y[x_3,x_2]  &              & y[x_4, x_3, x_2, x_1]\\\\\n",
+        "x_3 & y_3 &             & y[x_4, x_3,x_2]\\\\\n",
+        "    &     & y[x_4,x_3] \\\\\n",
+        "x_4 & y_4\n",
+        "\\end{array}\n",
+        "\\end{aligned}\n",
+        "$$\n",
+        "\n",
+        "where each element is the difference of the two to the left. The diagonal is the coefficients that we need: $a_0, a_1, a_2, a_3, a_4$.\n",
+        "\n",
+        "Notes: \n",
+        "* The order that the datapoints are added is arbitrary but will result in a different tableau (with the same diagonal).\n",
+        "* We can build this matrix / tableau diagonal-by-diagonal which means adding new data points doesn't require recalculation of the others.\n",
+        "* Each new diagonal (datapoint) takes $O(n)$ so assembly of the tableau takes $O(n^2)$.\n",
+        "* Evaluation of f(x) takes $O(n)$.\n",
+        "* These coefficients are independent of $x$."
+    ]
+})
+
+# Cell 13: Direct Solution
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Direct Solution\n",
+        "\n",
+        "Lastly, there is a direct solution method that only became really practical with the advent of modern computing since it focusses on linear systems:\n",
+        "\n",
+        "Consider a general, $n$ th order polynomial,\n",
+        "\n",
+        "$$ y(x) = a_n x^n + a_{n-1} x^{n-1} \\dots a_2 x^2 + a_1 x +a_0$$\n",
+        "\n",
+        "since\n",
+        "\n",
+        "$$y(x_i) = a_n x_i^n + a_{n-1} x_i^{n-1} \\dots a_2 x_i^2 + a_1 x_i +a_0 = y_i$$\n",
+        "\n",
+        "we can write out in matrix form,\n",
+        "\n",
+        "$$\n",
+        "\\begin{aligned}\n",
+        " \\begin{bmatrix}\n",
+        "1 & x_1 & x_1^2 & \\cdots & x_1^m \\\\\n",
+        "1 & x_2 & x_2^2 & \\cdots & x_2^m \\\\\n",
+        "\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\\n",
+        "1 & x_n & x_n^2 & \\cdots & x_n^m\n",
+        "\\end{bmatrix}\n",
+        "\\begin{bmatrix}\n",
+        "a_0 \\\\\n",
+        "a_1 \\\\\n",
+        "a_2 \\\\\n",
+        "\\vdots \\\\\n",
+        "a_m\n",
+        "\\end{bmatrix} =\n",
+        "\\begin{bmatrix}\n",
+        "y_1 \\\\\n",
+        "y_2 \\\\\n",
+        "y_3 \\\\\n",
+        "\\vdots \\\\\n",
+        "y_n\n",
+        "\\end{bmatrix}\n",
+        "\\end{aligned}\n",
+        "$$\n",
+        "\n",
+        "where the matrix of coefficients is called a Vandermonde matrix. This system can be solved for $a_i$ with a dense linear solver. The issue with this method is that the system is notoriously ill-conditioned and roundoff error accumulates rapidly for large $n$."
+    ]
+})
+
+# Cell 14: Example Toy Problem
+cells.append({
+    "cell_type": "markdown",
+    "metadata": {},
+    "source": [
+        "## Example: Interpolate our Toy Problem\n",
+        "\n",
+        "Let us now examine our toy problem. Since all the polynomial interpolation functions generate the same unique polynomial, any will suffice.\n",
+        "\n",
+        "**YIKES! Watch out for Runge's phenomenon:** Even for a seemingly ideal case of equally spaced samples, higher order polynomials can show huge oscillations between samples! Let's see this in action:"
+    ]
+})
+
+# Cell 15: Toy Code
+cells.append({
+    "cell_type": "code",
+    "execution_count": None,
+    "metadata": {},
+    "outputs": [],
+    "source": [
+        "# Define the function\n",
+        "def f(x):\n",
+        "  return np.exp(-(x/2)**2)\n",
+        "\n",
+        "# Create x values for plotting\n",
+        "x_toy = np.linspace(-6, 6, 100)\n",
+        "y_toy = f(x_toy)\n",
+        "\n",
+        "# Sample 11 random points in the range -5 to 6\n",
+        "x_d = np.arange(-5, 6, 1)\n",
+        "y_d = f(x_d)\n",
+        "\n",
+        "# Interpolate using numpy Legendre\n",
+        "coefficients = legendre.legfit(x_d, y_d, len(x_d) - 1)\n",
+        "legendre_polynomial = legendre.Legendre(coefficients)\n",
+        "\n",
+        "# Create x values for plotting the interpolated polynomial\n",
+        "x_interp = np.linspace(-5.5, 5.5, 200)\n",
+        "y_interp = legendre_polynomial(x_interp)\n",
+        "\n",
+        "# Plot the original curve, sampled points, and interpolated polynomial\n",
+        "fig = go.Figure()\n",
+        "fig.add_trace(go.Scatter(x=x_toy, y=y_toy, name='exp(-(x/2)^2)'))\n",
+        "fig.add_trace(go.Scatter(x=x_d, y=y_d, mode='markers', name='Sampled points', marker=dict(color='red')))\n",
+        "fig.add_trace(go.Scatter(x=x_interp, y=y_interp, name='Legendre Interpolation'))\n",
+        "fig.update_layout(title='Function, Sampled Points, and Legendre Interpolation', xaxis_title='x', yaxis_title='y')\n",
+        "fig.show()\n"
+    ]
+})
+
+nb_out = {
+    "cells": cells,
+    "metadata": {
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "codemirror_mode": {"name": "ipython", "version": 3},
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.11.9"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 2
+}
+
+with open(path, 'w') as f:
+    json.dump(nb_out, f, indent=1)
+
+print("Rewrote polynomial_interpolation.ipynb completely.")
