@@ -12,7 +12,7 @@ description: "Description of the formatting rule"
 - **Package**: PyPI & local name is `executable_engineering`. Local dev: `-e ./executable_engineering`. Colab: `pip install executable_engineering`. Build: `python -m build ./executable_engineering`.
 - **Interactivity**: Core philosophy: interactive numerical methods. PREFER `plotly` for all plotting. Use `ipywidgets`, `numpy`, `scipy`. (Use `matplotlib` only when static output is strictly required).
 - **Cross-Environment Execution**: 
-  - All pages must include a Colab markdown badge immediately below the main `# Title` in the first markdown cell: `[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/themintlab/ExecutableEngineering/blob/main/...)`
+  - All pages must include a Colab markdown badge immediately below the main `# Title` in the first markdown cell. To prevent MyST from auto-centering the badge as a block figure, always prepend it with `&nbsp;`, i.e., `&nbsp;[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/themintlab/ExecutableEngineering/blob/main/...)`
   - Do not assume packages are pre-installed in the cloud. Avoid heavy C-compiled dependencies unsupported by Pyodide/JupyterLite.
   - Only add the setup block when necessary (i.e., when Python code is actually used on the page). When needed, all required `import` statements (e.g., `numpy`, `plotly`) MUST be grouped together in a single code block located directly after the main `# Title` and Colab badge. Only include packages that are actually used in the page. This block must include the `executable_engineering` setup (if used) and must NOT be hidden. Example:
     ```python
