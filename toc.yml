@@ -53,11 +53,11 @@ project:
       children:
         - file: "chapters/root_finding/polynomial_roots.ipynb"
         - file: "chapters/root_finding/closed_methods.ipynb"
-        - file: "chapters/root_finding/open_methods.ipynb"
+        - file: "chapters/root_finding/open_methods/open_methods.ipynb"
           children:
-            - file: "chapters/root_finding/newton-raphson_method.ipynb"
-            - file: "chapters/root_finding/basins_of_attraction.ipynb"
-            - file: "chapters/root_finding/global_convergence_methods.ipynb"
+            - file: "chapters/root_finding/open_methods/newton-raphson_method.ipynb"
+            - file: "chapters/root_finding/open_methods/basins_of_attraction.ipynb"
+            - file: "chapters/root_finding/open_methods/global_convergence_methods.ipynb"
 
     - file: "chapters/optimization/optimization.ipynb"
       children:
