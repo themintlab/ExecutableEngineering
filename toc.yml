@@ -51,6 +51,7 @@ project:
 
     - file: "chapters/root_finding/root_finding.ipynb"
       children:
+        - file: "chapters/root_finding/types_of_roots.ipynb"
         - file: "chapters/root_finding/polynomial_roots.ipynb"
         - file: "chapters/root_finding/closed_methods.ipynb"
         - file: "chapters/root_finding/open_methods/open_methods.ipynb"
