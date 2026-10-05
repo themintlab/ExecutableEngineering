@@ -129,7 +129,23 @@ def plot_polynomial_roots_companion(n):
     max_abs_root = max(abs(roots)) if len(roots) > 0 else 1.0
     plot_limit = max_abs_root * 1.5
     
+    # --- Real-space plot ---
+    x_real = np.linspace(-plot_limit, plot_limit, 400)
+    y_real = poly_func(x_real)
+    
+    fig_real = go.Figure()
+    fig_real.add_trace(go.Scatter(x=x_real, y=y_real, mode='lines', name='f(x)'))
+    fig_real.add_hline(y=0, line_dash='dash', line_color='black', annotation_text='x-axis')
+    
+    # Find real roots (imaginary part near 0)
+    real_roots = [r.real for r in roots if abs(r.imag) < 1e-6]
+    if real_roots:
+        fig_real.add_trace(go.Scatter(x=real_roots, y=[0]*len(real_roots), mode='markers', marker=dict(color='red', size=10), name='Real Roots'))
+        
+    fig_real.update_layout(title=f"Real Space Plot: Roots of Order {n} Polynomial", xaxis_title='x', yaxis_title='f(x)')
+    fig_real.show()
+    
     # Plot using complex_plot_with_shadow
-    title = f"Roots of a Random Order {n} Polynomial"
+    title = f"Complex Space Plot: Roots of Order {n} Polynomial"
     complex_plot_with_shadow(poly_func, title=title, roots=roots, plot_range=(-plot_limit, plot_limit))
 
