@@ -276,3 +276,17 @@ def plot_basins_of_attraction(f, df, known_roots, title, real_range=(-2, 2), ima
     fig = go.Figure(data=go.Heatmap(z=colors, x=real_values, y=imag_values, colorscale='Viridis', showscale=False))
     fig.update_layout(title=title, xaxis_title='Real', yaxis_title='Imaginary', width=600, height=600)
     fig.show()
+
+def newton_raphson(f, df, x0, max_iter=8, tolerance=1e-6):
+  x = x0
+  guesses = [x]
+  for i in range(max_iter):
+    d = df(x)
+    if d == 0:
+        break
+    x_new = x - f(x) / d
+    guesses.append(x_new)
+    if abs(x_new - x) < tolerance:
+      return x_new, guesses
+    x = x_new
+  return None, guesses

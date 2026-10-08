@@ -6,7 +6,7 @@ from .openoptimization_module import OptimizerOpen
 from .gradientoptimization_module import OptimizerGrad
 from .numerical_error_module import python_internal_binary, decimal_to_binary
 from .linearsystems_module import visual_solve_2d, visualize_conditioning, visualize_matrix_norms, jacobi_step, gauss_seidel_step, sor_step, visualize_convergence_2d, create_diagonally_dominant_matrix, iter_solve, steepest_descent, conjugate_gradient, IterationTracker, discretise_poisson, spai
-from .functions_module import weierstrass, plot_and_find_roots, complex_plot_with_shadow, plot_polynomial_roots_companion, plot_secant, plot_newton_raphson, plot_basins_of_attraction
+from .functions_module import weierstrass, plot_and_find_roots, complex_plot_with_shadow, plot_polynomial_roots_companion, plot_secant, plot_newton_raphson, plot_basins_of_attraction, newton_raphson
 from .optimization_module import visual_golden_section, visual_powell_2d, newton_method
 
 __all__ = [
@@ -17,6 +17,7 @@ __all__ = [
   "plot_secant",
   "plot_newton_raphson",
   "plot_basins_of_attraction",
+  "newton_raphson",
   "plot_and_find_roots",
   "complex_plot_with_shadow",
   "weierstrass",
