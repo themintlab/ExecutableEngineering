@@ -149,3 +149,130 @@ def plot_polynomial_roots_companion(n):
     title = f"Complex Space Plot: Roots of Order {n} Polynomial"
     complex_plot_with_shadow(poly_func, title=title, roots=roots, plot_range=(-plot_limit, plot_limit))
 
+
+def plot_secant(f, x0, x1, tolerance=1e-6, max_iterations=100, title='Secant Method'):
+    import plotly.graph_objects as go
+    import plotly.express as px
+    import numpy as np
+
+    x_values = [x0, x1]
+    for i in range(max_iterations):
+        denom = f(x1) - f(x0)
+        if denom == 0:
+            break
+        x_new = x1 - f(x1) * (x1 - x0) / denom
+        x_values.append(x_new)
+        if abs(f(x_new)) < tolerance:
+            break
+        x0 = x1
+        x1 = x_new
+    
+    root = x_values[-1] if abs(f(x_values[-1])) < tolerance else None
+
+    # Determine plot bounds
+    min_x = min(x_values)
+    max_x = max(x_values)
+    padding = (max_x - min_x) * 0.2 if max_x > min_x else 0.5
+    x = np.linspace(min_x - padding, max_x + padding, 100)
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=x, y=f(x), mode='lines', name='f(x)'))
+    fig.add_trace(go.Scatter(x=[x_values[0], x_values[1]], y=[f(x_values[0]), f(x_values[1])], mode='markers', name='Initial guesses'))
+    
+    colors = px.colors.qualitative.Plotly
+    
+    for i in range(1, len(x_values) - 1):
+        # Secant line intersecting x-axis
+        fig.add_trace(go.Scatter(x=[x_values[i-1], x_values[i], x_values[i+1]], y=[f(x_values[i-1]), f(x_values[i]), 0], mode='lines', line=dict(dash='dash', color='gray'), showlegend=False))
+        # Vertical dotted line to the curve
+        fig.add_trace(go.Scatter(x=[x_values[i+1], x_values[i+1]], y=[0, f(x_values[i+1])], mode='lines', line=dict(dash='dot', color='gray'), showlegend=False))
+        
+        color = colors[(i-1) % len(colors)]
+        fig.add_trace(go.Scatter(x=[x_values[i+1]], y=[0], mode='markers', marker=dict(size=10, color=color), name=f'x_{i+1}'))
+    
+    if root:
+        fig.add_trace(go.Scatter(x=[root], y=[0], mode='markers', marker=dict(color='green', size=10), name='Approximate root'))
+    
+    fig.update_layout(title=title, xaxis_title='x', yaxis_title='f(x)')
+    fig.show()
+    return root, x_values
+
+def plot_newton_raphson(f, df, x0, tolerance=1e-6, max_iterations=100, title='Newton-Raphson Method', xrange=None, yrange=None):
+    import plotly.graph_objects as go
+    import plotly.express as px
+    import numpy as np
+    
+    x_values = [x0]
+    for i in range(max_iterations):
+        d = df(x0)
+        if d == 0:
+            break
+        x_new = x0 - f(x0) / d
+        x_values.append(x_new)
+        if abs(f(x_new)) < tolerance or abs(x_new - x0) < tolerance:
+            break
+        x0 = x_new
+
+    root = x_values[-1] if abs(f(x_values[-1])) < tolerance or abs(x_values[-1] - x_values[-2]) < tolerance else None
+
+    # Determine plot bounds
+    if xrange is None:
+        min_x = min(x_values)
+        max_x = max(x_values)
+        padding = (max_x - min_x) * 0.2 if max_x > min_x else 0.5
+        x = np.linspace(min_x - padding, max_x + padding, 100)
+    else:
+        x = np.linspace(xrange[0], xrange[1], 100)
+        
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=x, y=f(x), mode='lines', name='f(x)'))
+    fig.add_trace(go.Scatter(x=[x_values[0]], y=[f(x_values[0])], mode='markers', name='Initial guess'))
+    
+    colors = px.colors.qualitative.Plotly
+    
+    for i in range(len(x_values) - 1):
+        # Tangent line intersecting x-axis
+        fig.add_trace(go.Scatter(x=[x_values[i], x_values[i+1]], y=[f(x_values[i]), 0], mode='lines', line=dict(dash='dash', color='gray'), showlegend=False))
+        # Vertical dotted line to the curve
+        fig.add_trace(go.Scatter(x=[x_values[i+1], x_values[i+1]], y=[0, f(x_values[i+1])], mode='lines', line=dict(dash='dot', color='gray'), showlegend=False))
+        
+        color = colors[i % len(colors)]
+        fig.add_trace(go.Scatter(x=[x_values[i+1]], y=[0], mode='markers', marker=dict(size=10, color=color), name=f'x_{i+1}'))
+    
+    if root:
+        fig.add_trace(go.Scatter(x=[root], y=[0], mode='markers', marker=dict(color='green', size=10), name='Approximate root'))
+    
+    fig.update_layout(title=title, xaxis_title='x', yaxis_title='f(x)')
+    if xrange:
+        fig.update_layout(xaxis_range=xrange)
+    if yrange:
+        fig.update_layout(yaxis_range=yrange)
+        
+    fig.show()
+    return root, x_values
+
+def plot_basins_of_attraction(f, df, known_roots, title, real_range=(-2, 2), imag_range=(-2, 2), grid_size=500, th=1e-3):
+    import numpy as np
+    import plotly.graph_objects as go
+    from scipy.optimize import newton
+
+    real_values = np.linspace(real_range[0], real_range[1], grid_size)
+    imag_values = np.linspace(imag_range[0], imag_range[1], grid_size)
+    z_grid = np.array([[complex(r, i) for r in real_values] for i in imag_values])
+
+    roots = newton(f, z_grid, fprime=df)
+
+    colors = np.zeros((grid_size, grid_size))
+    for i in range(grid_size):
+        for j in range(grid_size):
+            if roots[i, j] is None:
+                colors[i, j] = 0
+            else:
+                for idx, r in enumerate(known_roots):
+                    if abs(roots[i, j] - r) < th:
+                        colors[i, j] = idx + 1
+                        break
+                        
+    fig = go.Figure(data=go.Heatmap(z=colors, x=real_values, y=imag_values, colorscale='Viridis', showscale=False))
+    fig.update_layout(title=title, xaxis_title='Real', yaxis_title='Imaginary', width=600, height=600)
+    fig.show()
