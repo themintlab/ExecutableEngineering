@@ -138,7 +138,7 @@ def forward_pass(x):
     activations.append(z)  # no activation on final output
     return zs, activations
 
-def backward_pass(zs, activations, y_true, lr=0.01):
+def backward_pass(zs, activations, y_true, lr=0.02):
     global weights, biases, weight_history, bias_history
     grads_w = [None] * len(weights)
     grads_b = [None] * len(biases)
@@ -208,8 +208,8 @@ def change_width(d, output_plot, metrics_plot, network_plot, status_label):
     reset_model(output_plot, metrics_plot, network_plot, status_label)
 
 
-def train_until_convergence(output_plot, metrics_plot, network_plot, status_label, target_loss=0.005, max_steps=10000, tol=1e-5, patience=200):
-    """Trains the neural network iteratively until a target loss or convergence plateau is reached."""
+def train_until_convergence(output_plot, metrics_plot, network_plot, status_label, target_loss=1e-4, max_steps=50000, window=5000, min_rel_improvement=0.005):
+    """Trains the neural network iteratively until a high-precision target loss or convergence plateau is reached."""
     global losses
     if true_function is None:
         status_label.value = "Please save a function first."
@@ -218,36 +218,32 @@ def train_until_convergence(output_plot, metrics_plot, network_plot, status_labe
     y_true = true_function(X)
     status_label.value = "Training to convergence..."
 
-    batch_size = 50
+    batch_size = 500
     step_count = 0
-    best_loss = float('inf')
-    stagnant_count = 0
     stop_reason = ""
+    window_start_loss = float('inf')
     current_loss = float('inf')
 
     while step_count < max_steps:
         for _ in range(batch_size):
             zs, activations = forward_pass(X)
-            current_loss = backward_pass(zs, activations, y_true)
+            current_loss = backward_pass(zs, activations, y_true, lr=0.02)
             losses.append(current_loss)
         step_count += batch_size
 
         if current_loss <= target_loss:
-            stop_reason = f"Target loss met ({current_loss:.4e} <= {target_loss}) in {step_count} steps. Total: {len(losses)}"
+            stop_reason = f"Target loss reached ({current_loss:.4e} <= {target_loss}) in {step_count} steps. Total: {len(losses)}"
             break
 
-        if abs(best_loss - current_loss) < tol:
-            stagnant_count += batch_size
-            if stagnant_count >= patience:
-                stop_reason = f"Converged (loss change < {tol:.0e} over {patience} steps) at loss {current_loss:.4e} in {step_count} steps. Total: {len(losses)}"
+        if step_count % window == 0:
+            rel_improvement = (window_start_loss - current_loss) / max(window_start_loss, 1e-8)
+            if step_count > window and rel_improvement < min_rel_improvement:
+                stop_reason = f"Converged to plateau (rel. change < {min_rel_improvement:.1%} over {window} steps) at loss {current_loss:.4e}. Total steps: {len(losses)}"
                 break
-        else:
-            stagnant_count = 0
-            if current_loss < best_loss:
-                best_loss = current_loss
+            window_start_loss = current_loss
 
     if not stop_reason:
-        stop_reason = f"Reached maximum of {max_steps} steps. Current loss: {current_loss:.4e}. Total: {len(losses)}"
+        stop_reason = f"Completed {step_count} steps. Total steps: {len(losses)} | Loss: {current_loss:.4e} (Click again to train further)"
 
     status_label.value = stop_reason
     update_plots(output_plot, metrics_plot, network_plot)
@@ -373,7 +369,7 @@ def interactive_neural_network():
     step_100 = Button(description='100')
     step_1000 = Button(description='1000')
     step_10000 = Button(description='10000')
-    train_converge_btn = Button(description='Train to Convergence', button_style='primary', tooltip='Trains iteratively until target loss (<=0.005) or plateau is reached')
+    train_converge_btn = Button(description='Train to Convergence', button_style='primary', tooltip='Trains iteratively until a plateau or high-precision convergence (<1e-4) is reached')
 
     depth_label = Label(value="Change Depth (layers):")
     depth_add = Button(description='+1')
