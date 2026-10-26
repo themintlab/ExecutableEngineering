@@ -27,7 +27,7 @@ The course is paced for approximately a 12 week program, with 3 lectures per wee
   * **Day 17:** Indefinite systems and Trust region methods
   * **Day 18:** Equality constraints, Nonlinear least squares, and Neural networks
 * **Midterm Break**
-* **[Week 7: Numerical Differentiation](../differentiation_and_integration/differentiation_and_integration.md)**
+* **[Week 7: Numerical Differentiation](../differentiation_and_integration/differentiation_and_integration.ipynb)**
   * **Day 19:** Finite difference (First-order derivatives)
   * **Day 20:** Finite difference (Second-order and higher dimensions)
   * **Day 21:** Even vs. uneven spacing, and Uncertainty amplification

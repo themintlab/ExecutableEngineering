@@ -76,7 +76,7 @@ project:
         - file: "chapters/optimization/nonlinear_least_squares.ipynb"
         - file: "chapters/optimization/neural_networks.ipynb"
     
-    - file: "chapters/differentiation_and_integration/differentiation_and_integration.md"
+    - file: "chapters/differentiation_and_integration/differentiation_and_integration.ipynb"
       children:
         - file: "chapters/differentiation_and_integration/finite_difference/finite_difference.ipynb"
           children:
@@ -87,11 +87,11 @@ project:
             - file: "chapters/differentiation_and_integration/finite_difference/uncertainty_amplification.ipynb"
         - file: "chapters/differentiation_and_integration/integration/numerical_integration.ipynb"
           children:
-            - file: "chapters/differentiation_and_integration/integration/newton-cotes_formulae.ipynb"
+            - file: "chapters/differentiation_and_integration/integration/newton_cotes_formulae.ipynb"
               children:
-                - file: "chapters/differentiation_and_integration/integration/riemann's_integrals.ipynb"
+                - file: "chapters/differentiation_and_integration/integration/riemanns_integrals.ipynb"
                 - file: "chapters/differentiation_and_integration/integration/trapezoid_rule.ipynb"
-                - file: "chapters/differentiation_and_integration/integration/simpson's_rules.ipynb"
+                - file: "chapters/differentiation_and_integration/integration/simpsons_rules.ipynb"
             - file: "chapters/differentiation_and_integration/integration/romberg_rule.ipynb"
             - file: "chapters/differentiation_and_integration/integration/gaussian_quadrature.ipynb"
 
