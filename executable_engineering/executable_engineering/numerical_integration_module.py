@@ -1,12 +1,28 @@
 import numpy as np
 import plotly.graph_objects as go
 
-def visual_left_riemann(f, a, b, h):
-
+def left_reimann(f, a, b, h):
     x_left = np.arange(a, b, h)
     y_left = f(x_left)
-
     integral_approx = np.sum(y_left * h)
+
+    return {
+        "x_left": x_left,
+        "y_left": y_left,
+        "integral_approx": integral_approx,
+        "a": a,
+        "b": b,
+        "h": h,
+    }
+
+
+def visualize_left_reimann(f, data):
+    x_left = data["x_left"]
+    y_left = data["y_left"]
+    integral_approx = data["integral_approx"]
+    a = data["a"]
+    b = data["b"]
+    h = data["h"]
 
     x_span = b - a
     x_margin = x_span * 0.15
@@ -18,41 +34,71 @@ def visual_left_riemann(f, a, b, h):
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=x_vals,
-        y=y_vals,
-        mode='lines',
-        name='Function f(x)',
-        line=dict(color='lightgray', width=3)
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals,
+            y=y_vals,
+            mode="lines",
+            name="Function f(x)",
+            line=dict(color="lightgray", width=3),
+        )
+    )
 
-    fig.add_trace(go.Bar(
-        x=x_left,
-        y=y_left,
-        width=h,
-        offset=0,
-        name=f'Rectangles (h={h})',
-        marker=dict(
-            color='rgba(135, 206, 250, 0.5)',
-            line=dict(color='royalblue', width=1.5)
-        ),
-        hoverinfo='text',
-        hovertext=[f"Interval: [{x:.3g}, {x+h:.3g}]<br>Height: {y:.4g}<br>Area: {y*h:.4g}"
-                   for x, y in zip(x_left, y_left)]
-    ))
+    fig.add_trace(
+        go.Bar(
+            x=x_left,
+            y=y_left,
+            width=h,
+            offset=0,
+            name=f"Rectangles (h={h})",
+            marker=dict(
+                color="rgba(135, 206, 250, 0.5)",
+                line=dict(color="royalblue", width=1.5),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Interval: [{x:.3g}, {x+h:.3g}]<br>Height: {y:.4g}<br>Area: {y*h:.4g}"
+                for x, y in zip(x_left, y_left)
+            ],
+        )
+    )
 
-    fig.add_trace(go.Scatter(
-        x=x_left,
-        y=y_left,
-        mode='markers',
-        name='Left Riemann Points',
-        marker=dict(color='crimson', size=11, symbol='circle', line=dict(color='black', width=1)),
-        hoverinfo='text',
-        hovertext=[f"Left Point<br>x = {x:.4g}<br>f(x) = {y:.4g}" for x, y in zip(x_left, y_left)]
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_left,
+            y=y_left,
+            mode="markers",
+            name="Left Riemann Points",
+            marker=dict(
+                color="crimson",
+                size=11,
+                symbol="circle",
+                line=dict(color="black", width=1),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Left Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
+                for x, y in zip(x_left, y_left)
+            ],
+        )
+    )
 
-    fig.add_vline(x=a, line_width=2, line_dash="dash", line_color="black", annotation_text="a", annotation_position="top left")
-    fig.add_vline(x=b, line_width=2, line_dash="dash", line_color="black", annotation_text="b", annotation_position="top right")
+    fig.add_vline(
+        x=a,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="a",
+        annotation_position="top left",
+    )
+    fig.add_vline(
+        x=b,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="b",
+        annotation_position="top right",
+    )
 
     fig.update_layout(
         title=f"Left Riemann Sum Approximation<br>Total Area Approximation ≈ {integral_approx:.5f}",
@@ -61,22 +107,55 @@ def visual_left_riemann(f, a, b, h):
         width=950,
         height=520,
         margin=dict(l=25, r=200, t=75, b=25),
-        plot_bgcolor='white',
-        xaxis=dict(showgrid=True, gridcolor='#eaeaea', zeroline=True, zerolinecolor='#cccccc'),
-        yaxis=dict(showgrid=True, gridcolor='#eaeaea', zeroline=True, zerolinecolor='#cccccc'),
-        legend=dict(x=1.02, y=1, xanchor='left', yanchor='top', bgcolor='rgba(255, 255, 255, 0.8)'),
+        plot_bgcolor="white",
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="#eaeaea",
+            zeroline=True,
+            zerolinecolor="#cccccc",
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="#eaeaea",
+            zeroline=True,
+            zerolinecolor="#cccccc",
+        ),
+        legend=dict(
+            x=1.02,
+            y=1,
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255, 255, 255, 0.8)",
+        ),
     )
 
     return fig
 
 
-def visual_right_riemann(f, a, b, h):
-
+def right_reimann(f, a, b, h):
     x_right = np.arange(a + h, b + h, h)
     x_right = x_right[x_right <= b]
     y_right = f(x_right)
 
     integral_approx = np.sum(y_right * h)
+
+    return {
+        "x_right": x_right,
+        "y_right": y_right,
+        "integral_approx": integral_approx,
+        "a": a,
+        "b": b,
+        "h": h,
+    }
+
+
+def visualize_right_reimann(f, data):
+    x_right = data["x_right"]
+    y_right = data["y_right"]
+    integral_approx = data["integral_approx"]
+    a = data["a"]
+    b = data["b"]
+    h = data["h"]
 
     x_span = b - a
     x_margin = x_span * 0.15
@@ -88,60 +167,72 @@ def visual_right_riemann(f, a, b, h):
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=x_vals,
-        y=y_vals,
-        mode='lines',
-        name='Function f(x)',
-        line=dict(color='lightgray', width=3)
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals,
+            y=y_vals,
+            mode="lines",
+            name="Function f(x)",
+            line=dict(color="lightgray", width=3),
+        )
+    )
 
-    fig.add_trace(go.Bar(
-        x=x_right - h,
-        y=y_right,
-        width=h,
-        offset=0,
-        name=f'Rectangles (h={h})',
-        marker=dict(
-            color='rgba(135, 206, 250, 0.5)',
-            line=dict(color='royalblue', width=1.5)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Interval: [{x-h:.3g}, {x:.3g}]<br>"
-            f"Height: {y:.4g}<br>"
-            f"Area: {y*h:.4g}"
-            for x, y in zip(x_right, y_right)
-        ]
-    ))
+    fig.add_trace(
+        go.Bar(
+            x=x_right - h,
+            y=y_right,
+            width=h,
+            offset=0,
+            name=f"Rectangles (h={h})",
+            marker=dict(
+                color="rgba(135, 206, 250, 0.5)",
+                line=dict(color="royalblue", width=1.5),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Interval: [{x-h:.3g}, {x:.3g}]<br>"
+                f"Height: {y:.4g}<br>"
+                f"Area: {y*h:.4g}"
+                for x, y in zip(x_right, y_right)
+            ],
+        )
+    )
 
-    fig.add_trace(go.Scatter(
-        x=x_right,
-        y=y_right,
-        mode='markers',
-        name='Right Riemann Points',
-        marker=dict(
-            color='crimson',
-            size=11,
-            symbol='circle',
-            line=dict(color='black', width=1)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Right Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
-            for x, y in zip(x_right, y_right)
-        ]
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_right,
+            y=y_right,
+            mode="markers",
+            name="Right Riemann Points",
+            marker=dict(
+                color="crimson",
+                size=11,
+                symbol="circle",
+                line=dict(color="black", width=1),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Right Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
+                for x, y in zip(x_right, y_right)
+            ],
+        )
+    )
 
     fig.add_vline(
-        x=a, line_width=2, line_dash="dash",
-        line_color="black", annotation_text="a",
-        annotation_position="top left"
+        x=a,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="a",
+        annotation_position="top left",
     )
     fig.add_vline(
-        x=b, line_width=2, line_dash="dash",
-        line_color="black", annotation_text="b",
-        annotation_position="top right"
+        x=b,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="b",
+        annotation_position="top right",
     )
 
     fig.update_layout(
@@ -151,22 +242,54 @@ def visual_right_riemann(f, a, b, h):
         width=950,
         height=520,
         margin=dict(l=25, r=200, t=75, b=25),
-        plot_bgcolor='white',
-        xaxis=dict(showgrid=True, gridcolor='#eaeaea',
-                   zeroline=True, zerolinecolor='#cccccc'),
-        yaxis=dict(showgrid=True, gridcolor='#eaeaea',
-                   zeroline=True, zerolinecolor='#cccccc'),
-        legend=dict(x=1.02, y=1, xanchor='left', yanchor='top', bgcolor='rgba(255, 255, 255, 0.8)')
+        plot_bgcolor="white",
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="#eaeaea",
+            zeroline=True,
+            zerolinecolor="#cccccc",
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="#eaeaea",
+            zeroline=True,
+            zerolinecolor="#cccccc",
+        ),
+        legend=dict(
+            x=1.02,
+            y=1,
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255, 255, 255, 0.8)",
+        ),
     )
 
     return fig
 
-def visual_midpoint_riemann(f, a, b, h):
 
-    x_mid = np.arange(a + h/2, b, h)
+def midpoint_riemann(f, a, b, h):
+    x_mid = np.arange(a + h / 2, b, h)
     y_mid = f(x_mid)
 
     integral_approx = np.sum(y_mid * h)
+
+    return {
+        "x_mid": x_mid,
+        "y_mid": y_mid,
+        "integral_approx": integral_approx,
+        "a": a,
+        "b": b,
+        "h": h,
+    }
+
+
+def visualize_midpoint_riemann(f, data):
+    x_mid = data["x_mid"]
+    y_mid = data["y_mid"]
+    integral_approx = data["integral_approx"]
+    a = data["a"]
+    b = data["b"]
+    h = data["h"]
 
     x_span = b - a
     x_margin = x_span * 0.15
@@ -178,63 +301,73 @@ def visual_midpoint_riemann(f, a, b, h):
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=x_vals,
-        y=y_vals,
-        mode='lines',
-        name='Function f(x)',
-        line=dict(color='lightgray', width=3)
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals,
+            y=y_vals,
+            mode="lines",
+            name="Function f(x)",
+            line=dict(color="lightgray", width=3),
+        )
+    )
 
-    fig.add_trace(go.Bar(
-        x=x_mid,
-        y=y_mid,
-        width=h,
-        offset=-h/2,
-        name=f'Rectangles (h={h})',
-        marker=dict(
-            color='rgba(135, 206, 250, 0.5)',
-            line=dict(color='royalblue', width=1.5)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Interval: [{x-h/2:.3g}, {x+h/2:.3g}]<br>"
-            f"Height: {y:.4g}<br>"
-            f"Area: {y*h:.4g}"
-            for x, y in zip(x_mid, y_mid)
-        ]
-    ))
+    fig.add_trace(
+        go.Bar(
+            x=x_mid,
+            y=y_mid,
+            width=h,
+            offset=-h / 2,
+            name=f"Rectangles (h={h})",
+            marker=dict(
+                color="rgba(135, 206, 250, 0.5)",
+                line=dict(color="royalblue", width=1.5),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Interval: [{x-h/2:.3g}, {x+h/2:.3g}]<br>"
+                f"Height: {y:.4g}<br>"
+                f"Area: {y*h:.4g}"
+                for x, y in zip(x_mid, y_mid)
+            ],
+        )
+    )
 
-    fig.add_trace(go.Scatter(
-        x=x_mid,
-        y=y_mid,
-        mode='markers',
-        name='Midpoint Riemann Points',
-        marker=dict(
-            color='crimson',
-            size=11,
-            symbol='circle',
-            line=dict(color='black', width=1)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Midpoint<br>x = {x:.4g}<br>f(x) = {y:.4g}"
-            for x, y in zip(x_mid, y_mid)
-        ]
-    ))
-
-    fig.add_vline(
-        x=a, line_width=2, line_dash="dash",
-        line_color="black",
-        annotation_text="a",
-        annotation_position="top left"
+    fig.add_trace(
+        go.Scatter(
+            x=x_mid,
+            y=y_mid,
+            mode="markers",
+            name="Midpoint Riemann Points",
+            marker=dict(
+                color="crimson",
+                size=11,
+                symbol="circle",
+                line=dict(color="black", width=1),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Midpoint<br>x = {x:.4g}<br>f(x) = {y:.4g}"
+                for x, y in zip(x_mid, y_mid)
+            ],
+        )
     )
 
     fig.add_vline(
-        x=b, line_width=2, line_dash="dash",
+        x=a,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="a",
+        annotation_position="top left",
+    )
+
+    fig.add_vline(
+        x=b,
+        line_width=2,
+        line_dash="dash",
         line_color="black",
         annotation_text="b",
-        annotation_position="top right"
+        annotation_position="top right",
     )
 
     fig.update_layout(
@@ -244,43 +377,60 @@ def visual_midpoint_riemann(f, a, b, h):
         width=950,
         height=520,
         margin=dict(l=25, r=200, t=75, b=25),
-        plot_bgcolor='white',
+        plot_bgcolor="white",
         xaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         legend=dict(
             x=1.02,
             y=1,
-            xanchor='left',
-            yanchor='top',
-            bgcolor='rgba(255, 255, 255, 0.8)'
-        )
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255, 255, 255, 0.8)",
+        ),
     )
 
     return fig
 
-def visual_trapezoid_rule(f, a, b, h):
 
+def trapezoid_rule(f, a, b, h):
     x_points = np.arange(a, b, h)
     x_points = np.append(x_points, b)
-
     x_points = np.unique(x_points)
 
     y_points = f(x_points)
 
     widths = np.diff(x_points)
-    integral_approx = np.sum(
-        widths * (y_points[:-1] + y_points[1:]) / 2
-    )
+    integral_approx = np.sum(widths * (y_points[:-1] + y_points[1:]) / 2)
+
+    return {
+        "x_points": x_points,
+        "y_points": y_points,
+        "widths": widths,
+        "integral_approx": integral_approx,
+        "a": a,
+        "b": b,
+        "h": h,
+    }
+
+
+def visualize_trapezoid_rule(f, data):
+    x_points = data["x_points"]
+    y_points = data["y_points"]
+    widths = data["widths"]
+    integral_approx = data["integral_approx"]
+    a = data["a"]
+    b = data["b"]
+    h = data["h"]
 
     x_span = b - a
     x_margin = x_span * 0.15
@@ -292,66 +442,74 @@ def visual_trapezoid_rule(f, a, b, h):
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=x_vals,
-        y=y_vals,
-        mode='lines',
-        name='Function f(x)',
-        line=dict(color='lightgray', width=3)
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals,
+            y=y_vals,
+            mode="lines",
+            name="Function f(x)",
+            line=dict(color="lightgray", width=3),
+        )
+    )
 
     for i in range(len(x_points) - 1):
-        x_trap = [x_points[i], x_points[i],
-                  x_points[i+1], x_points[i+1]]
-        y_trap = [0, y_points[i],
-                  y_points[i+1], 0]
+        x_trap = [x_points[i], x_points[i], x_points[i + 1], x_points[i + 1]]
+        y_trap = [0, y_points[i], y_points[i + 1], 0]
 
-        fig.add_trace(go.Scatter(
-            x=x_trap,
-            y=y_trap,
-            mode='lines',
-            fill='toself',
-            fillcolor='rgba(135, 206, 250, 0.5)',
-            line=dict(color='royalblue', width=1.5),
-            showlegend=(i == 0),
-            name=f'Trapezoids (h={h})',
-            hoverinfo='text',
-            text=[
-                f"Interval: [{x_points[i]:.3g}, {x_points[i+1]:.3g}]<br>"
-                f"Area ≈ {widths[i] * (y_points[i] + y_points[i+1]) / 2:.4g}"
-            ] * 4
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=x_trap,
+                y=y_trap,
+                mode="lines",
+                fill="toself",
+                fillcolor="rgba(135, 206, 250, 0.5)",
+                line=dict(color="royalblue", width=1.5),
+                showlegend=(i == 0),
+                name=f"Trapezoids (h={h})",
+                hoverinfo="text",
+                text=[
+                    f"Interval: [{x_points[i]:.3g}, {x_points[i+1]:.3g}]<br>"
+                    f"Area ≈ {widths[i] * (y_points[i] + y_points[i+1]) / 2:.4g}"
+                ]
+                * 4,
+            )
+        )
 
-    fig.add_trace(go.Scatter(
-        x=x_points,
-        y=y_points,
-        mode='markers',
-        name='Trapezoid Rule Points',
-        marker=dict(
-            color='crimson',
-            size=11,
-            symbol='circle',
-            line=dict(color='black', width=1)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Evaluation Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
-            for x, y in zip(x_points, y_points)
-        ]
-    ))
-
-    fig.add_vline(
-        x=a, line_width=2, line_dash="dash",
-        line_color="black",
-        annotation_text="a",
-        annotation_position="top left"
+    fig.add_trace(
+        go.Scatter(
+            x=x_points,
+            y=y_points,
+            mode="markers",
+            name="Trapezoid Rule Points",
+            marker=dict(
+                color="crimson",
+                size=11,
+                symbol="circle",
+                line=dict(color="black", width=1),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Evaluation Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
+                for x, y in zip(x_points, y_points)
+            ],
+        )
     )
 
     fig.add_vline(
-        x=b, line_width=2, line_dash="dash",
+        x=a,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="a",
+        annotation_position="top left",
+    )
+    fig.add_vline(
+        x=b,
+        line_width=2,
+        line_dash="dash",
         line_color="black",
         annotation_text="b",
-        annotation_position="top right"
+        annotation_position="top right",
     )
 
     fig.update_layout(
@@ -361,33 +519,31 @@ def visual_trapezoid_rule(f, a, b, h):
         width=950,
         height=520,
         margin=dict(l=25, r=200, t=75, b=25),
-        plot_bgcolor='white',
+        plot_bgcolor="white",
         xaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         legend=dict(
             x=1.02,
             y=1,
-            xanchor='left',
-            yanchor='top',
-            bgcolor='rgba(255, 255, 255, 0.8)'
-        )
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255, 255, 255, 0.8)",
+        ),
     )
 
     return fig
 
-
-def visual_simpsons_13(f, a, b, h):
-
+def simpsons_13(f, a, b, h):
     n_float = (b - a) / h
     n = round(n_float)
 
@@ -407,6 +563,27 @@ def visual_simpsons_13(f, a, b, h):
         + 2 * np.sum(y_points[2:-1:2])
     )
 
+
+    return {
+        "x_points": x_points,
+        "y_points": y_points,
+        "n": n,
+        "integral_approx": integral_approx,
+        "a": a,
+        "b": b,
+        "h": h,
+    }
+
+
+def visualize_simpsons_13(f, data):
+    x_points = data["x_points"]
+    y_points = data["y_points"]
+    n = data["n"]
+    integral_approx = data["integral_approx"]
+    a = data["a"]
+    b = data["b"]
+    h = data["h"]
+
     x_span = b - a
     x_margin = x_span * 0.15
     plot_x_min = a - x_margin
@@ -417,18 +594,19 @@ def visual_simpsons_13(f, a, b, h):
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=x_vals,
-        y=y_vals,
-        mode='lines',
-        name='Function f(x)',
-        line=dict(color='lightgray', width=3)
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals,
+            y=y_vals,
+            mode="lines",
+            name="Function f(x)",
+            line=dict(color="lightgray", width=3),
+        )
+    )
 
     for i in range(0, n, 2):
-
-        x0, x1, x2 = x_points[i:i+3]
-        y0, y1, y2 = y_points[i:i+3]
+        x0, x1, x2 = x_points[i : i + 3]
+        y0, y1, y2 = y_points[i : i + 3]
 
         x_curve = np.linspace(x0, x2, 100)
 
@@ -438,63 +616,74 @@ def visual_simpsons_13(f, a, b, h):
 
         y_curve = y0 * L0 + y1 * L1 + y2 * L2
 
-        area = (h / 3) * (y0 + 4*y1 + y2)
+        area = (h / 3) * (y0 + 4 * y1 + y2)
 
-        fig.add_trace(go.Scatter(
-            x=np.concatenate([x_curve, x_curve[::-1]]),
-            y=np.concatenate([y_curve, np.zeros_like(y_curve)]),
-            mode='lines',
-            fill='toself',
-            fillcolor='rgba(135, 206, 250, 0.5)',
-            line=dict(color='royalblue', width=1.5),
-            name="Parabolic Approximations",
-            showlegend=(i == 0),
-            hoverinfo='text',
-            text=[
-                f"Interval: [{x0:.3g}, {x2:.3g}]<br>"
-                f"Simpson Area ≈ {area:.5g}"
-            ] * (2 * len(x_curve))
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=np.concatenate([x_curve, x_curve[::-1]]),
+                y=np.concatenate([y_curve, np.zeros_like(y_curve)]),
+                mode="lines",
+                fill="toself",
+                fillcolor="rgba(135, 206, 250, 0.5)",
+                line=dict(color="royalblue", width=1.5),
+                name="Parabolic Approximations",
+                showlegend=(i == 0),
+                hoverinfo="text",
+                text=[
+                    f"Interval: [{x0:.3g}, {x2:.3g}]<br>"
+                    f"Simpson Area ≈ {area:.5g}"
+                ]
+                * (2 * len(x_curve)),
+            )
+        )
 
-        fig.add_trace(go.Scatter(
-            x=x_curve,
-            y=y_curve,
-            mode='lines',
-            line=dict(color='royalblue', width=2),
-            showlegend=False,
-            hoverinfo='skip'
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=x_curve,
+                y=y_curve,
+                mode="lines",
+                line=dict(color="royalblue", width=2),
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
 
-    fig.add_trace(go.Scatter(
-        x=x_points,
-        y=y_points,
-        mode='markers',
-        name="Simpson's 1/3 Rule Points",
-        marker=dict(
-            color='crimson',
-            size=11,
-            symbol='circle',
-            line=dict(color='black', width=1)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Evaluation Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
-            for x, y in zip(x_points, y_points)
-        ]
-    ))
-
-    fig.add_vline(
-        x=a, line_width=2, line_dash="dash",
-        line_color="black",
-        annotation_text="a",
-        annotation_position="top left"
+    fig.add_trace(
+        go.Scatter(
+            x=x_points,
+            y=y_points,
+            mode="markers",
+            name="Simpson's 1/3 Rule Points",
+            marker=dict(
+                color="crimson",
+                size=11,
+                symbol="circle",
+                line=dict(color="black", width=1),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Evaluation Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
+                for x, y in zip(x_points, y_points)
+            ],
+        )
     )
 
     fig.add_vline(
-        x=b, line_width=2, line_dash="dash",
+        x=a,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="a",
+        annotation_position="top left",
+    )
+
+    fig.add_vline(
+        x=b,
+        line_width=2,
+        line_dash="dash",
         line_color="black",
         annotation_text="b",
-        annotation_position="top right"
+        annotation_position="top right",
     )
 
     fig.update_layout(
@@ -507,32 +696,31 @@ def visual_simpsons_13(f, a, b, h):
         width=950,
         height=520,
         margin=dict(l=25, r=200, t=75, b=25),
-        plot_bgcolor='white',
+        plot_bgcolor="white",
         xaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         legend=dict(
             x=1.02,
             y=1,
-            xanchor='left',
-            yanchor='top',
-            bgcolor='rgba(255, 255, 255, 0.8)'
-        )
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255, 255, 255, 0.8)",
+        ),
     )
 
     return fig
 
-def visual_simpsons_38(f, a, b, h):
-
+def simpsons_38(f, a, b, h):
     n_float = (b - a) / h
     n = round(n_float)
 
@@ -552,6 +740,27 @@ def visual_simpsons_38(f, a, b, h):
 
     integral_approx = (3 * h / 8) * np.sum(weights * y_points)
 
+
+    return {
+        "x_points": x_points,
+        "y_points": y_points,
+        "n": n,
+        "integral_approx": integral_approx,
+        "a": a,
+        "b": b,
+        "h": h,
+    }
+
+
+def visualize_simpsons_38(f, data):
+    x_points = data["x_points"]
+    y_points = data["y_points"]
+    n = data["n"]
+    integral_approx = data["integral_approx"]
+    a = data["a"]
+    b = data["b"]
+    h = data["h"]
+
     x_span = b - a
     x_margin = x_span * 0.15
     plot_x_min = a - x_margin
@@ -562,95 +771,100 @@ def visual_simpsons_38(f, a, b, h):
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=x_vals,
-        y=y_vals,
-        mode='lines',
-        name='Function f(x)',
-        line=dict(color='lightgray', width=3)
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals,
+            y=y_vals,
+            mode="lines",
+            name="Function f(x)",
+            line=dict(color="lightgray", width=3),
+        )
+    )
 
     for i in range(0, n, 3):
-
-        x_group = x_points[i:i+4]
-        y_group = y_points[i:i+4]
+        x_group = x_points[i : i + 4]
+        y_group = y_points[i : i + 4]
 
         x_curve = np.linspace(x_group[0], x_group[-1], 100)
-
         y_curve = np.zeros_like(x_curve)
 
         for j in range(4):
             basis = np.ones_like(x_curve)
-
             for k in range(4):
                 if k != j:
-                    basis *= (
-                        (x_curve - x_group[k])
-                        / (x_group[j] - x_group[k])
-                    )
-
+                    basis *= (x_curve - x_group[k]) / (x_group[j] - x_group[k])
             y_curve += y_group[j] * basis
 
         area = (3 * h / 8) * (
-            y_group[0] + 3*y_group[1]
-            + 3*y_group[2] + y_group[3]
+            y_group[0] + 3 * y_group[1] + 3 * y_group[2] + y_group[3]
         )
 
-        fig.add_trace(go.Scatter(
-            x=np.concatenate([x_curve, x_curve[::-1]]),
-            y=np.concatenate([y_curve, np.zeros_like(y_curve)]),
-            mode='lines',
-            fill='toself',
-            fillcolor='rgba(135, 206, 250, 0.5)',
-            line=dict(color='royalblue', width=1.5),
-            name='Cubic Approximations',
-            showlegend=(i == 0),
-            hoverinfo='text',
-            text=[
-                f"Interval: [{x_group[0]:.3g}, {x_group[-1]:.3g}]<br>"
-                f"Simpson 3/8 Area ≈ {area:.5g}"
-            ] * (2 * len(x_curve))
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=np.concatenate([x_curve, x_curve[::-1]]),
+                y=np.concatenate([y_curve, np.zeros_like(y_curve)]),
+                mode="lines",
+                fill="toself",
+                fillcolor="rgba(135, 206, 250, 0.5)",
+                line=dict(color="royalblue", width=1.5),
+                name="Cubic Approximations",
+                showlegend=(i == 0),
+                hoverinfo="text",
+                text=[
+                    f"Interval: [{x_group[0]:.3g}, {x_group[-1]:.3g}]<br>"
+                    f"Simpson 3/8 Area ≈ {area:.5g}"
+                ]
+                * (2 * len(x_curve)),
+            )
+        )
 
-        fig.add_trace(go.Scatter(
-            x=x_curve,
-            y=y_curve,
-            mode='lines',
-            line=dict(color='royalblue', width=2),
-            showlegend=False,
-            hoverinfo='skip'
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=x_curve,
+                y=y_curve,
+                mode="lines",
+                line=dict(color="royalblue", width=2),
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
 
-    fig.add_trace(go.Scatter(
-        x=x_points,
-        y=y_points,
-        mode='markers',
-        name="Simpson's 3/8 Rule Points",
-        marker=dict(
-            color='crimson',
-            size=11,
-            symbol='circle',
-            line=dict(color='black', width=1)
-        ),
-        hoverinfo='text',
-        hovertext=[
-            f"Evaluation Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
-            for x, y in zip(x_points, y_points)
-        ]
-    ))
-
-    fig.add_vline(
-        x=a, line_width=2, line_dash="dash",
-        line_color="black",
-        annotation_text="a",
-        annotation_position="top left"
+    fig.add_trace(
+        go.Scatter(
+            x=x_points,
+            y=y_points,
+            mode="markers",
+            name="Simpson's 3/8 Rule Points",
+            marker=dict(
+                color="crimson",
+                size=11,
+                symbol="circle",
+                line=dict(color="black", width=1),
+            ),
+            hoverinfo="text",
+            hovertext=[
+                f"Evaluation Point<br>x = {x:.4g}<br>f(x) = {y:.4g}"
+                for x, y in zip(x_points, y_points)
+            ],
+        )
     )
 
     fig.add_vline(
-        x=b, line_width=2, line_dash="dash",
+        x=a,
+        line_width=2,
+        line_dash="dash",
+        line_color="black",
+        annotation_text="a",
+        annotation_position="top left",
+    )
+
+    fig.add_vline(
+        x=b,
+        line_width=2,
+        line_dash="dash",
         line_color="black",
         annotation_text="b",
-        annotation_position="top right"
+        annotation_position="top right",
     )
 
     fig.update_layout(
@@ -663,26 +877,26 @@ def visual_simpsons_38(f, a, b, h):
         width=950,
         height=520,
         margin=dict(l=25, r=200, t=75, b=25),
-        plot_bgcolor='white',
+        plot_bgcolor="white",
         xaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor='#eaeaea',
+            gridcolor="#eaeaea",
             zeroline=True,
-            zerolinecolor='#cccccc'
+            zerolinecolor="#cccccc",
         ),
         legend=dict(
             x=1.02,
             y=1,
-            xanchor='left',
-            yanchor='top',
-            bgcolor='rgba(255, 255, 255, 0.8)'
-        )
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255, 255, 255, 0.8)",
+        ),
     )
 
     return fig
