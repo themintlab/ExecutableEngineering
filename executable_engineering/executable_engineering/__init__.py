@@ -88,6 +88,20 @@ from .integration_module import (
     plot_romberg_convergence,
     plot_gaussian_quadrature,
 )
+from .numerical_integration_module import (
+    left_reimann,
+    visualize_left_reimann,
+    right_reimann,
+    visualize_right_reimann,
+    midpoint_riemann,
+    visualize_midpoint_riemann,
+    trapezoid_rule,
+    visualize_trapezoid_rule,
+    simpsons_13,
+    visualize_simpsons_13,
+    simpsons_38,
+    visualize_simpsons_38,
+)
 
 __all__ = [
   "interactive_neural_network",
@@ -180,4 +194,16 @@ __all__ = [
   "plot_simpson_rule",
   "plot_romberg_convergence",
   "plot_gaussian_quadrature",
+  "left_reimann",
+  "visualize_left_reimann",
+  "right_reimann",
+  "visualize_right_reimann",
+  "midpoint_riemann",
+  "visualize_midpoint_riemann",
+  "trapezoid_rule",
+  "visualize_trapezoid_rule",
+  "simpsons_13",
+  "visualize_simpsons_13",
+  "simpsons_38",
+  "visualize_simpsons_38",
 ]
