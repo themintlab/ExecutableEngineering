@@ -456,10 +456,11 @@ def plot_error_scaling(h_values, errors_dict, expected_orders=None, title="Finit
     return fig
 
 
-def plot_surface_gradient_3d(func, x_range=(-2, 2), y_range=(-2, 2), n_grid=40, arrow_stride=4, title="3D Surface and Numerical Gradient Vector Field"):
+def plot_surface_gradient_3d(func, x_range=(-2, 2), y_range=(-2, 2), n_grid=40, arrow_stride=4, title="3D Surface and Numerical Gradient Vector Field", subplots=False):
     """
     Interactive 3D Plotly visualization of a 2D scalar field z = f(x, y)
-    with 3D gradient vector cones.
+    with 3D gradient vector cones, optionally expanded to subplots for
+    gradient components in x and y.
     """
     x = np.linspace(x_range[0], x_range[1], n_grid)
     y = np.linspace(y_range[0], y_range[1], n_grid)
@@ -468,13 +469,8 @@ def plot_surface_gradient_3d(func, x_range=(-2, 2), y_range=(-2, 2), n_grid=40, 
 
     dx = x[1] - x[0]
     dy = y[1] - y[0]
-    dZdy, dZdx = np.gradient(Z, dy, dx)
-
-    fig = go.Figure()
-    fig.add_trace(go.Surface(
-        x=X, y=Y, z=Z, colorscale='Viridis', opacity=0.85,
-        name='f(x, y)', showscale=False
-    ))
+    dZdx = np.gradient(Z, dx, axis=1)
+    dZdy = np.gradient(Z, dy, axis=0)
 
     # Downsampled cone vectors
     Xs = X[::arrow_stride, ::arrow_stride].flatten()
@@ -483,6 +479,55 @@ def plot_surface_gradient_3d(func, x_range=(-2, 2), y_range=(-2, 2), n_grid=40, 
     Us = dZdx[::arrow_stride, ::arrow_stride].flatten()
     Vs = dZdy[::arrow_stride, ::arrow_stride].flatten()
     Ws = np.asarray([0.0 for _ in Us])
+
+    if subplots:
+        fig = make_subplots(
+            rows=1, cols=3,
+            specs=[[{"type": "scene"}, {"type": "scene"}, {"type": "scene"}]],
+            subplot_titles=(
+                "Surface f(x, y) with ∇f Cones",
+                "Gradient Component: ∂f/∂x",
+                "Gradient Component: ∂f/∂y"
+            ),
+            horizontal_spacing=0.03
+        )
+        # Panel 1: Surface with gradient cones
+        fig.add_trace(go.Surface(
+            x=X, y=Y, z=Z, colorscale='Viridis', opacity=0.85,
+            name='f(x, y)', showscale=False
+        ), row=1, col=1)
+        fig.add_trace(go.Cone(
+            x=Xs, y=Ys, z=Zs, u=Us, v=Vs, w=Ws,
+            sizemode='scaled', sizeref=0.35,
+            colorscale='Blues', showscale=False,
+            name='∇f'
+        ), row=1, col=1)
+
+        # Panel 2: x component ∂f/∂x
+        fig.add_trace(go.Surface(
+            x=X, y=Y, z=dZdx, colorscale='RdBu', showscale=False,
+            name='∂f/∂x'
+        ), row=1, col=2)
+
+        # Panel 3: y component ∂f/∂y
+        fig.add_trace(go.Surface(
+            x=X, y=Y, z=dZdy, colorscale='RdBu', showscale=False,
+            name='∂f/∂y'
+        ), row=1, col=3)
+
+        fig.update_layout(
+            title=title,
+            height=550,
+            template="plotly_white",
+            margin=dict(l=10, r=10, b=10, t=50)
+        )
+        return fig
+
+    fig = go.Figure()
+    fig.add_trace(go.Surface(
+        x=X, y=Y, z=Z, colorscale='Viridis', opacity=0.85,
+        name='f(x, y)', showscale=False
+    ))
 
     fig.add_trace(go.Cone(
         x=Xs, y=Ys, z=Zs, u=Us, v=Vs, w=Ws,
