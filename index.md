@@ -14,7 +14,7 @@ The core philosphy of this text it to experience first-hand the use of numerical
 
 * [PDF of the full book](https://github.com/themintlab/ExecutableEngineering/releases/download/latest/book.pdf)
 * [Youtube channel with lectures](https://www.youtube.com/@McMaster_EngPhys3NM4)
-* [Virtual Tutor](https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98)
+* [Virtual Tutor](https://notebook.google.com/notebook/e1933866-a509-4c2a-b6f2-b627a9b76b05)
 * [Associated PyPI Package](https://pypi.org/project/executable-engineering/)
 
 This resource is being developed in part through the [McMaster University Open Educational Resources grant](https://mi.mcmaster.ca/oer-grant).

@@ -42,7 +42,7 @@ site:
 
   actions:
     - title: "Course AI"
-      url: https://notebooklm.google.com/notebook/31dca965-3ce5-42e2-b423-c04bd11bfc98
+      url: https://notebook.google.com/notebook/e1933866-a509-4c2a-b6f2-b627a9b76b05
   options:
     hide_authors: true
     logo: images/exe_logo.png
