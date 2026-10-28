@@ -2,12 +2,11 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 this_directory = Path(__file__).parent
-
 long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="executable_engineering",
-    version="0.1.49",
+    version="0.1.50",
     description="Demonstrative tools for the Executable Engineering textbook",
     long_description=long_description,
     long_description_content_type="text/markdown",
