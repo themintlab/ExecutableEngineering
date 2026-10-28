@@ -1,7 +1,7 @@
 import numpy as np
 import plotly.graph_objects as go
 
-def left_reimann(f, a, b, h):
+def left_riemann(f, a, b, h):
     x_left = np.arange(a, b, h)
     y_left = f(x_left)
     integral_approx = np.sum(y_left * h)
@@ -16,7 +16,7 @@ def left_reimann(f, a, b, h):
     }
 
 
-def visualize_left_reimann(f, data):
+def visualize_left_riemann(f, data):
     x_left = data["x_left"]
     y_left = data["y_left"]
     integral_approx = data["integral_approx"]
@@ -132,7 +132,7 @@ def visualize_left_reimann(f, data):
     return fig
 
 
-def right_reimann(f, a, b, h):
+def right_riemann(f, a, b, h):
     x_right = np.arange(a + h, b + h, h)
     x_right = x_right[x_right <= b]
     y_right = f(x_right)
@@ -149,7 +149,7 @@ def right_reimann(f, a, b, h):
     }
 
 
-def visualize_right_reimann(f, data):
+def visualize_right_riemann(f, data):
     x_right = data["x_right"]
     y_right = data["y_right"]
     integral_approx = data["integral_approx"]
