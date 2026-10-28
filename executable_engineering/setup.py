@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="executable_engineering",
-    version="0.1.48",
+    version="0.1.49",
     description="Demonstrative tools for the Executable Engineering textbook",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -21,6 +21,7 @@ setup(
         "scipy",
         "plotly",
         "pandas",
+        "inspect",
     ],
     extras_require={
         "docs": ["pyppeteer", "nbconvert"],
