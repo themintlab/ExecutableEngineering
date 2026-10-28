@@ -103,6 +103,8 @@ from .numerical_integration_module import (
     visualize_simpsons_38,
 )
 
+from .display_code_module import display_source
+
 __all__ = [
   "interactive_neural_network",
   "train_until_convergence",
@@ -206,4 +208,5 @@ __all__ = [
   "visualize_simpsons_13",
   "simpsons_38",
   "visualize_simpsons_38",
+  "display_source",
 ]
