@@ -1,14 +1,16 @@
 import numpy as np
 import plotly.graph_objects as go
 
-def left_riemann(f, a, b, h):
-    x_left = np.arange(a, b, h)
+def left_riemann(f, a, b, n):
+    h = (b - a) / n
+    x_left = np.linspace(a, b - h, n)
     y_left = f(x_left)
     integral_approx = np.sum(y_left * h)
 
     return {
         "x_left": x_left,
         "y_left": y_left,
+        "n": n,
         "integral_approx": integral_approx,
         "a": a,
         "b": b,
@@ -132,9 +134,9 @@ def visualize_left_riemann(f, data):
     return fig
 
 
-def right_riemann(f, a, b, h):
-    x_right = np.arange(a + h, b + h, h)
-    x_right = x_right[x_right <= b]
+def right_riemann(f, a, b, n):
+    h = (b - a) / n
+    x_right = np.linspace(a + h, b, n)
     y_right = f(x_right)
 
     integral_approx = np.sum(y_right * h)
@@ -142,6 +144,7 @@ def right_riemann(f, a, b, h):
     return {
         "x_right": x_right,
         "y_right": y_right,
+        "n": n,
         "integral_approx": integral_approx,
         "a": a,
         "b": b,
@@ -267,8 +270,9 @@ def visualize_right_riemann(f, data):
     return fig
 
 
-def midpoint_riemann(f, a, b, h):
-    x_mid = np.arange(a + h / 2, b, h)
+def midpoint_riemann(f, a, b, n):
+    h = (b - a) / n
+    x_mid = np.linspace(a + h / 2, b - h / 2, n)
     y_mid = f(x_mid)
 
     integral_approx = np.sum(y_mid * h)
@@ -276,6 +280,7 @@ def midpoint_riemann(f, a, b, h):
     return {
         "x_mid": x_mid,
         "y_mid": y_mid,
+        "n": n,
         "integral_approx": integral_approx,
         "a": a,
         "b": b,
@@ -402,11 +407,9 @@ def visualize_midpoint_riemann(f, data):
     return fig
 
 
-def trapezoid_rule(f, a, b, h):
-    x_points = np.arange(a, b, h)
-    x_points = np.append(x_points, b)
-    x_points = np.unique(x_points)
-
+def trapezoid_rule(f, a, b, n):
+    h = (b - a) / n
+    x_points = np.linspace(a, b, n + 1)
     y_points = f(x_points)
 
     widths = np.diff(x_points)
@@ -416,6 +419,7 @@ def trapezoid_rule(f, a, b, h):
         "x_points": x_points,
         "y_points": y_points,
         "widths": widths,
+        "n": n,
         "integral_approx": integral_approx,
         "a": a,
         "b": b,
@@ -543,16 +547,11 @@ def visualize_trapezoid_rule(f, data):
 
     return fig
 
-def simpsons_13(f, a, b, h):
-    n_float = (b - a) / h
-    n = round(n_float)
+def simpsons_13(f, a, b, n):
+    if n <= 0 or n % 2 != 0:
+        raise ValueError("Simpson's 1/3 Rule requires a positive even number of subintervals.")
 
-    if not np.isclose(n_float, n) or n <= 0:
-        raise ValueError("(b - a) must be a positive integer multiple of h.")
-
-    if n % 2 != 0:
-        raise ValueError("Simpson's 1/3 Rule requires an even number of subintervals.")
-
+    h = (b - a) / n
     x_points = np.linspace(a, b, n + 1)
     y_points = np.asarray(f(x_points))
 
@@ -562,7 +561,6 @@ def simpsons_13(f, a, b, h):
         + 4 * np.sum(y_points[1:-1:2])
         + 2 * np.sum(y_points[2:-1:2])
     )
-
 
     return {
         "x_points": x_points,
@@ -720,16 +718,11 @@ def visualize_simpsons_13(f, data):
 
     return fig
 
-def simpsons_38(f, a, b, h):
-    n_float = (b - a) / h
-    n = round(n_float)
+def simpsons_38(f, a, b, n):
+    if n <= 0 or n % 3 != 0:
+        raise ValueError("Simpson's 3/8 Rule requires a positive number of subintervals divisible by 3.")
 
-    if not np.isclose(n_float, n) or n <= 0:
-        raise ValueError("(b - a) must be a positive integer multiple of h.")
-
-    if n % 3 != 0:
-        raise ValueError("Simpson's 3/8 Rule requires a number of subintervals divisible by 3.")
-
+    h = (b - a) / n
     x_points = np.linspace(a, b, n + 1)
     y_points = np.asarray(f(x_points))
 
@@ -739,7 +732,6 @@ def simpsons_38(f, a, b, h):
     weights[3:-1:3] = 2
 
     integral_approx = (3 * h / 8) * np.sum(weights * y_points)
-
 
     return {
         "x_points": x_points,

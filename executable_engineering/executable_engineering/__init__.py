@@ -72,7 +72,6 @@ from .differentiation_module import (
     plot_uneven_spacing_derivative,
 )
 from .integration_module import (
-    trapezoid_rule,
     simpson_13_rule,
     simpson_38_rule,
     romberg_integration,
@@ -181,7 +180,6 @@ __all__ = [
   "plot_frequency_noise_spectrum",
   "plot_uneven_spacing_derivative",
   # Integration module
-  "trapezoid_rule",
   "simpson_13_rule",
   "simpson_38_rule",
   "romberg_integration",
