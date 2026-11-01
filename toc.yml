@@ -99,10 +99,10 @@ project:
       children:
         - file: "chapters/differential_equations/initial_value_problems/initial_value_problems.ipynb"
           children:
-            - file: "chapters/differential_equations/initial_value_problems/explicit_methods.ipynb"
+            - file: "chapters/differential_equations/initial_value_problems/explicit_methods/explicit_methods.ipynb"
               children:
-                - file: "chapters/differential_equations/initial_value_problems/first_order_runge-kutta.ipynb"
-                - file: "chapters/differential_equations/initial_value_problems/general_runge-kutta.ipynb"
+                - file: "chapters/differential_equations/initial_value_problems/explicit_methods/first_order_runge_kutta.ipynb"
+                - file: "chapters/differential_equations/initial_value_problems/explicit_methods/general_runge_kutta.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/adaptive_time_stepping.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/implicit_methods_and_stiffness.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/implicit_runge-kutta_methods.ipynb"

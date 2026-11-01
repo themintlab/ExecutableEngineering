@@ -101,6 +101,18 @@ from .numerical_integration_module import (
     simpsons_38,
     visualize_simpsons_38,
 )
+from .differential_equations_module import (
+    forward_euler,
+    heun_method,
+    midpoint_ode,
+    ralston_method,
+    rk3_method,
+    rk4_method,
+    plot_direction_field,
+    plot_ode_comparison,
+    plot_heun_iterations,
+    plot_rk4_stages,
+)
 
 from .display_code_module import display_source
 
@@ -206,5 +218,16 @@ __all__ = [
   "visualize_simpsons_13",
   "simpsons_38",
   "visualize_simpsons_38",
+  # Differential equations module
+  "forward_euler",
+  "heun_method",
+  "midpoint_ode",
+  "ralston_method",
+  "rk3_method",
+  "rk4_method",
+  "plot_direction_field",
+  "plot_ode_comparison",
+  "plot_heun_iterations",
+  "plot_rk4_stages",
   "display_source",
 ]
