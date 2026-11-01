@@ -105,7 +105,7 @@ project:
                 - file: "chapters/differential_equations/initial_value_problems/explicit_methods/general_runge_kutta.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/adaptive_time_stepping.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/implicit_methods_and_stiffness.ipynb"
-            - file: "chapters/differential_equations/initial_value_problems/implicit_runge-kutta_methods.ipynb"
+            - file: "chapters/differential_equations/initial_value_problems/implicit_runge_kutta_methods.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/multistep_methods.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/systems_of_equations.ipynb"
             - file: "chapters/differential_equations/initial_value_problems/reduction_of_order.ipynb"
