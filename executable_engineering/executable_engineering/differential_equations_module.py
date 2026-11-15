@@ -1,6 +1,9 @@
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from scipy.integrate import solve_ivp
+from scipy.optimize import root
+from scipy.spatial.distance import cdist
 
 
 def forward_euler(f, t0, y0, t_end, h):
@@ -1382,5 +1385,488 @@ def plot_pde_method_comparison(alpha=0.1, dx=0.1, dt=0.02, num_steps=6):
         ],
     )
     return fig
+
+
+def shooting_ballistics(y_target=50.0, t_end=5.0, v0_guess=1.0):
+    def model(t, state):
+        return [state[1], -9.8]
+
+    def residual(v0):
+        sol = solve_ivp(model, [0.0, t_end], [0.0, float(v0[0])])
+        return sol.y[0, -1] - y_target
+
+    res = root(residual, [v0_guess])
+    v0_star = float(res.x[0])
+    t_eval = np.linspace(0.0, t_end, 100)
+    sol = solve_ivp(model, [0.0, t_end], [0.0, v0_star], t_eval=t_eval)
+    return sol.t, sol.y[0], sol.y[1], v0_star
+
+
+def rbf_poisson_2d(N=20):
+    epsilon = N / np.sqrt(2.0)
+    x = np.linspace(0.0, 1.0, N)
+    X, Y = np.meshgrid(x, x)
+    points = np.column_stack([X.ravel(), Y.ravel()])
+    r = cdist(points, points)
+    exp_term = np.exp(-(epsilon * r) ** 2)
+    A = exp_term
+    L = (4.0 * epsilon**2 - 4.0 * epsilon**4 * r**2) * exp_term
+    rhs = np.full(points.shape[0], 4.0)
+    boundary = (
+        (points[:, 0] == 0.0)
+        | (points[:, 0] == 1.0)
+        | (points[:, 1] == 0.0)
+        | (points[:, 1] == 1.0)
+    )
+    L[boundary, :] = A[boundary, :]
+    rhs[boundary] = 0.0
+    weights = np.linalg.solve(L, rhs)
+    U = (A @ weights).reshape(N, N)
+    return X, Y, U
+
+
+def fdm_rocket_bvp(n=10):
+    h = 5.0 / n
+    A = np.zeros((n + 1, n + 1))
+    b = np.zeros(n + 1)
+    A[0, 0] = 1.0
+    A[n, n] = 1.0
+    b[n] = 50.0
+    for i in range(1, n):
+        A[i, i - 1] = 1.0
+        A[i, i] = -2.0
+        A[i, i + 1] = 1.0
+        b[i] = -9.8 * h**2
+    t = np.linspace(0.0, 5.0, n + 1)
+    y = np.linalg.solve(A, b)
+    return t, y, A, b
+
+
+def fdm_neumann_bvp(n=10, ghost_node=False):
+    h = (np.pi / 2.0) / n
+    A = np.zeros((n + 1, n + 1))
+    b = np.zeros(n + 1)
+    A[0, 0] = 1.0
+    for i in range(1, n):
+        A[i, i - 1] = 1.0
+        A[i, i] = -2.0 + 4.0 * h**2
+        A[i, i + 1] = 1.0
+        b[i] = 4.0 * h**2 * (i * h)
+    if ghost_node:
+        A[n, n - 1] = 2.0
+        A[n, n] = -2.0 + 4.0 * h**2
+        b[n] = 4.0 * h**2 * (n * h)
+    else:
+        A[n, n - 1] = -1.0
+        A[n, n] = 1.0
+    x = np.linspace(0.0, np.pi / 2.0, n + 1)
+    return x, np.linalg.solve(A, b)
+
+
+def fdm_nonlinear_bvp(n=10):
+    h = 2.0 / n
+
+    def residual(y):
+        r = np.zeros(n + 1)
+        r[0] = y[0]
+        r[1:n] = (
+            y[:-2] - 2.0 * y[1:-1] + y[2:]
+            + 1.5 * h * y[1:-1] * (y[2:] - y[:-2])
+        )
+        r[n] = y[n] - 1.0
+        return r
+
+    y0 = np.linspace(0.0, 1.0, n + 1)
+    sol = root(residual, y0)
+    x = np.linspace(0.0, 2.0, n + 1)
+    return x, sol.x, sol
+
+
+def fdm_poisson_2d(n=10):
+    h = 1.0 / n
+    size = (n + 1) ** 2
+    A = np.zeros((size, size))
+    b = np.zeros(size)
+    for i in range(n + 1):
+        for j in range(n + 1):
+            idx = i * (n + 1) + j
+            if i == 0 or i == n or j == 0 or j == n:
+                A[idx, idx] = 1.0
+            else:
+                A[idx, idx] = -4.0
+                A[idx, (i - 1) * (n + 1) + j] = 1.0
+                A[idx, (i + 1) * (n + 1) + j] = 1.0
+                A[idx, i * (n + 1) + (j - 1)] = 1.0
+                A[idx, i * (n + 1) + (j + 1)] = 1.0
+                b[idx] = -h**2
+    U = np.linalg.solve(A, b).reshape((n + 1, n + 1))
+    return U, A, b
+
+
+def plot_shooting_ballistics(t_end=5.0, y_target=50.0, v0_guess=1.0):
+    """Plot the converged shooting trajectory and velocity profile."""
+    t, y, v, v0_star = shooting_ballistics(
+        y_target=y_target, t_end=t_end, v0_guess=v0_guess
+    )
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=(
+            f"Altitude y(t) (v0* = {v0_star:.2f} m/s)",
+            "Vertical Velocity v(t)",
+        ),
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t, y=y, mode="lines", name="Shooting y(t)",
+            line=dict(color="#2563EB", width=3),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=[0.0, t_end], y=[0.0, y_target], mode="markers",
+            name="Boundary conditions",
+            marker=dict(color="#DC2626", size=10, symbol="diamond"),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t, y=v, mode="lines", name="Velocity v(t)",
+            line=dict(color="#059669", width=3),
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(title_text="Time t (s)", row=1, col=1)
+    fig.update_xaxes(title_text="Time t (s)", row=1, col=2)
+    fig.update_yaxes(title_text="Altitude y (m)", row=1, col=1)
+    fig.update_yaxes(title_text="Velocity v (m/s)", row=1, col=2)
+    fig.update_layout(
+        template="plotly_white",
+        title="Shooting Method Solution for Ballistics BVP",
+        height=440,
+    )
+    return fig
+
+
+def plot_shooting_trial_trajectories(t_end=5.0, y_target=50.0):
+    """Plot interactive trial ballistics trajectories across initial velocities."""
+    t = np.linspace(0.0, t_end, 100)
+    v0_star = y_target / t_end + 0.5 * 9.8 * t_end
+    v0_trials = [10.0, 20.0, 28.0, v0_star, 40.0, 50.0, 60.0]
+    default_idx = 3
+
+    fig = go.Figure()
+    for v0 in v0_trials:
+        y = v0 * t - 0.5 * 9.8 * t**2
+        fig.add_trace(
+            go.Scatter(
+                x=t, y=y, mode="lines", name=f"v0 = {v0:.1f} m/s",
+                line=dict(color="#9CA3AF", width=1.5), opacity=0.45,
+                showlegend=False,
+            )
+        )
+
+    n_bg = len(v0_trials)
+    for idx, v0 in enumerate(v0_trials):
+        y = v0 * t - 0.5 * 9.8 * t**2
+        fig.add_trace(
+            go.Scatter(
+                x=t, y=y, mode="lines",
+                name=f"Selected v0 = {v0:.2f} m/s (y({t_end:g}) = {y[-1]:.1f} m)",
+                line=dict(color="#2563EB", width=3.5),
+                visible=(idx == default_idx),
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=[t_end], y=[y[-1]], mode="markers",
+                name=f"Endpoint ({t_end:g}, {y[-1]:.1f})",
+                marker=dict(color="#2563EB", size=11),
+                visible=(idx == default_idx),
+            )
+        )
+
+    fig.add_trace(
+        go.Scatter(
+            x=[t_end], y=[y_target], mode="markers",
+            name=f"Target y({t_end:g}) = {y_target:g} m",
+            marker=dict(color="#DC2626", size=14, symbol="star"),
+        )
+    )
+
+    steps = []
+    total_traces = len(fig.data)
+    for idx, v0 in enumerate(v0_trials):
+        vis = [True] * n_bg + [False] * (2 * len(v0_trials)) + [True]
+        vis[n_bg + 2 * idx] = True
+        vis[n_bg + 2 * idx + 1] = True
+        steps.append(
+            dict(
+                method="update",
+                args=[{"visible": vis[:total_traces]}],
+                label=f"{v0:.1f}",
+            )
+        )
+
+    fig.update_layout(
+        template="plotly_white",
+        title="Trial Ballistics Trajectories vs Target Boundary Condition",
+        xaxis_title="Time t (s)",
+        yaxis_title="Altitude y (m)",
+        yaxis=dict(range=[0.0, 125.0]),
+        height=500,
+        sliders=[
+            dict(
+                active=default_idx,
+                currentvalue={"prefix": "Initial velocity v0 (m/s): "},
+                pad={"t": 50},
+                steps=steps,
+            )
+        ],
+    )
+    return fig
+
+
+def plot_bvp_spline_collocation(sol, y_target=50.0):
+    """Plot a SciPy solve_bvp cubic spline solution and its collocation mesh."""
+    t_dense = np.linspace(sol.x[0], sol.x[-1], 200)
+    y_dense = sol.sol(t_dense)
+
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=(
+            f"Altitude y(t) (v0 = {sol.y[1, 0]:.2f} m/s)",
+            "Velocity v(t)",
+        ),
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t_dense, y=y_dense[0], mode="lines", name="Spline y(t)",
+            line=dict(color="#2563EB", width=3),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=sol.x, y=sol.y[0], mode="markers", name="Collocation nodes",
+            marker=dict(color="#DC2626", size=8),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=[sol.x[0], sol.x[-1]], y=[0.0, y_target], mode="markers",
+            name="Boundary conditions",
+            marker=dict(color="#059669", size=10, symbol="diamond"),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t_dense, y=y_dense[1], mode="lines", name="Spline v(t)",
+            line=dict(color="#D97706", width=3),
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(title_text="Time t (s)", row=1, col=1)
+    fig.update_xaxes(title_text="Time t (s)", row=1, col=2)
+    fig.update_yaxes(title_text="Altitude y (m)", row=1, col=1)
+    fig.update_yaxes(title_text="Velocity v (m/s)", row=1, col=2)
+    fig.update_layout(
+        template="plotly_white",
+        title="Cubic Spline Collocation Solution via solve_bvp",
+        height=440,
+    )
+    return fig
+
+
+def plot_rbf_poisson_3d(X, Y, U):
+    """Plot a 3D interactive surface for the RBF Poisson collocation solution."""
+    fig = go.Figure(
+        data=[
+            go.Surface(
+                x=X, y=Y, z=U, colorscale="Viridis",
+                colorbar=dict(title="u(x, y)"), name="RBF surface",
+            ),
+            go.Scatter3d(
+                x=X.ravel(), y=Y.ravel(), z=U.ravel(),
+                mode="markers", name="Collocation nodes",
+                marker=dict(size=2.5, color="#1F2937", opacity=0.65),
+            ),
+        ]
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title="2D Poisson Solution using Gaussian RBF Collocation",
+        scene=dict(xaxis_title="x", yaxis_title="y", zaxis_title="u(x, y)"),
+        height=550,
+    )
+    return fig
+
+
+def plot_fdm_rocket(n=10):
+    """Plot the finite-difference rocket trajectory against the exact solution."""
+    t, y, _, _ = fdm_rocket_bvp(n=n)
+    t_fine = np.linspace(0.0, 5.0, 200)
+    y_exact = 34.5 * t_fine - 0.5 * 9.8 * t_fine**2
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=t_fine, y=y_exact, mode="lines", name="Analytical y(t)",
+            line=dict(color="#1F2937", width=2.5, dash="dash"),
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t, y=y, mode="lines+markers", name=f"FDM (n={n})",
+            line=dict(color="#2563EB", width=2.5), marker=dict(size=8),
+        )
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title=f"Rocket Trajectory BVP via Finite Differences (n = {n})",
+        xaxis_title="Time t (s)",
+        yaxis_title="Altitude y (m)",
+        height=440,
+    )
+    return fig
+
+
+def plot_fdm_neumann(n=10):
+    """Plot the Neumann BVP finite-difference solution alongside exact curve."""
+    x, y = fdm_neumann_bvp(n=n, ghost_node=False)
+    x_fine = np.linspace(0.0, np.pi / 2.0, 200)
+    y_exact = x_fine + 0.5 * np.sin(2.0 * x_fine)
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=x_fine, y=y_exact, mode="lines", name="Exact: x + 0.5 sin(2x)",
+            line=dict(color="#1F2937", width=2.5, dash="dash"),
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=x, y=y, mode="lines+markers", name=f"FDM Backward BC (n={n})",
+            line=dict(color="#2563EB", width=2.5), marker=dict(size=8),
+        )
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title=f"Neumann BVP Solution on [0, pi/2] (n = {n})",
+        xaxis_title="x",
+        yaxis_title="y(x)",
+        height=440,
+    )
+    return fig
+
+
+def plot_fdm_neumann_convergence(n_values=(10, 15, 20, 25, 40, 80)):
+    """Compare right-boundary error between backward difference and ghost node."""
+    y_exact_end = np.pi / 2.0
+    hs = [(np.pi / 2.0) / n for n in n_values]
+    err_backward = [
+        abs(fdm_neumann_bvp(n=n, ghost_node=False)[1][-1] - y_exact_end)
+        for n in n_values
+    ]
+    err_ghost = [
+        abs(fdm_neumann_bvp(n=n, ghost_node=True)[1][-1] - y_exact_end)
+        for n in n_values
+    ]
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=hs, y=err_backward, mode="lines+markers",
+            name="Backward difference BC",
+            line=dict(color="#2563EB", width=2.5), marker=dict(size=8),
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=hs, y=err_ghost, mode="lines+markers",
+            name="Ghost-node central BC",
+            line=dict(color="#DC2626", width=2.5, dash="dot"),
+            marker=dict(size=8, symbol="square"),
+        )
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title="Right-Boundary Error |y_n - pi/2| vs Grid Spacing h",
+        xaxis_title="Grid spacing h",
+        yaxis_title="Absolute error at x = pi/2",
+        xaxis_type="log",
+        yaxis_type="log",
+        height=440,
+    )
+    return fig
+
+
+def plot_fdm_nonlinear(n=10):
+    """Plot the solution of the nonlinear BVP y'' = -3 y y'."""
+    x, y, _ = fdm_nonlinear_bvp(n=n)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=x, y=y, mode="lines+markers", name=f"Nonlinear FDM (n={n})",
+            line=dict(color="#059669", width=2.5), marker=dict(size=8),
+        )
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title=f"Solution of Nonlinear BVP y'' = -3 y y' (n = {n})",
+        xaxis_title="x",
+        yaxis_title="y(x)",
+        height=440,
+    )
+    return fig
+
+
+def plot_fdm_poisson_2d(U, A):
+    """Plot the 2D Poisson solution heatmap and matrix sparsity pattern."""
+    n = U.shape[0] - 1
+    coords = np.linspace(0.0, 1.0, n + 1)
+    rows, cols = np.nonzero(A)
+
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=(
+            f"Solution u(x, y) ({n + 1}x{n + 1} grid)",
+            f"Sparsity Pattern of A ({A.shape[0]}x{A.shape[1]})",
+        ),
+    )
+    fig.add_trace(
+        go.Heatmap(
+            x=coords, y=coords, z=U, colorscale="Viridis",
+            colorbar=dict(title="u(x, y)", x=0.45),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=cols, y=rows, mode="markers", name="Nonzero entries",
+            marker=dict(color="#1F2937", size=4, symbol="square"),
+            showlegend=False,
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(title_text="x", row=1, col=1)
+    fig.update_yaxes(title_text="y", row=1, col=1)
+    fig.update_xaxes(title_text="Column index", row=1, col=2)
+    fig.update_yaxes(
+        title_text="Row index", autorange="reversed", row=1, col=2
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title="2D Poisson BVP Solution and Stencil Matrix Sparsity",
+        height=460,
+    )
+    return fig
+
 
 
