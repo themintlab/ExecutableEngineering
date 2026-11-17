@@ -117,6 +117,9 @@ project:
             - file: "chapters/differential_equations/boundary_value_problems/finite_difference_method.ipynb"
             - file: "chapters/differential_equations/boundary_value_problems/finite_volume.ipynb"
         - file: "chapters/differential_equations/partial_differential_equations/partial_differential_equations.ipynb"
+          children:
+            - file: "chapters/differential_equations/partial_differential_equations/solving_time_dependent_pdes.ipynb"
+            - file: "chapters/differential_equations/partial_differential_equations/summary_of_pde_solvers.ipynb"
 
     - file: "chapters/finite_element_method/finite_element_method.ipynb"
       children:

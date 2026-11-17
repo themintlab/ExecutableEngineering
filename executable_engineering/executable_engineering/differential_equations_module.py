@@ -1,5 +1,7 @@
+import ipywidgets as widgets
 import numpy as np
 import plotly.graph_objects as go
+from IPython.display import display
 from plotly.subplots import make_subplots
 from scipy.integrate import solve_ivp
 from scipy.optimize import root
@@ -1051,243 +1053,197 @@ def crank_nicolson_heat(T0, alpha, dx, dt, num_steps):
 crank_nicholson_heat = crank_nicolson_heat
 
 
-def plot_forward_euler_heat(alpha=1.0, dx=0.05, dt_values=None, num_steps=30):
-    if dt_values is None:
-        dt_values = [0.0005, 0.0010, 0.00125, 0.00135, 0.0015]
+def _interactive_heat_widget(method, alpha=1.0, dx=0.05, dt=0.0010, steps=20, max_steps=50):
+    """Display interactive 3-slider (dx, dt, step) Plotly UI for a 1D heat solver."""
+    x_fine = np.linspace(0.0, 1.0, 301)
+    T0_fine = 1.0 - np.abs(2.0 * x_fine - 1.0)
+    modes = np.arange(1, 50, 2)[:, None]
+    coeffs = 8.0 * ((-1.0) ** ((modes - 1) // 2)) / (np.pi * modes) ** 2
+    sin_fine = np.sin(modes * np.pi * x_fine)
 
-    x = np.linspace(0.0, 1.0, int(round(1.0 / dx)) + 1)
-    dx_actual = x[1] - x[0]
-    T0 = np.sin(np.pi * x)
-
-    fig = go.Figure()
-    default_idx = 1
-
-    # Add initial condition trace (always visible)
-    fig.add_trace(
-        go.Scatter(
-            x=x,
-            y=T0,
-            mode="lines",
-            name="Initial T(x, 0) = sin(πx)",
-            line=dict(color="#6B7280", width=2, dash="dash"),
-            visible=True,
-        )
+    style = {"description_width": "initial"}
+    dx_slider = widgets.FloatSlider(
+        value=dx,
+        min=0.02,
+        max=0.10,
+        step=0.01,
+        description="Step size Δx:",
+        readout_format=".2f",
+        continuous_update=False,
+        style=style,
+        layout=widgets.Layout(width="270px"),
+    )
+    dt_slider = widgets.FloatSlider(
+        value=dt,
+        min=0.0005,
+        max=0.0100,
+        step=0.0005,
+        description="Time step Δt:",
+        readout_format=".4f",
+        continuous_update=False,
+        style=style,
+        layout=widgets.Layout(width="290px"),
+    )
+    step_slider = widgets.IntSlider(
+        value=steps,
+        min=0,
+        max=max_steps,
+        step=1,
+        description="Step number:",
+        continuous_update=False,
+        style=style,
+        layout=widgets.Layout(width="270px"),
     )
 
-    traces_per_step = 3
-    for idx, dt in enumerate(dt_values):
-        vis = idx == default_idx
-        T_hist = forward_euler_heat(T0, alpha, dx_actual, dt, num_steps)
-        t_mid = (num_steps // 2) * dt
-        t_final = num_steps * dt
-        T_exact = np.exp(-alpha * (np.pi**2) * t_final) * np.sin(np.pi * x)
+    def render(dx_val, dt_val, step_val):
+        n = int(round(1.0 / dx_val)) + 1
+        x = np.linspace(0.0, 1.0, n)
+        dx_actual = x[1] - x[0]
+        T0 = 1.0 - np.abs(2.0 * x - 1.0)
+        t_val = step_val * dt_val
+        r_euler = alpha * dt_val / dx_actual**2
+        T_exact = (
+            T0_fine
+            if step_val == 0
+            else np.sum(
+                coeffs * np.exp(-alpha * (modes * np.pi) ** 2 * t_val) * sin_fine,
+                axis=0,
+            )
+        )
+
+        fig = go.Figure()
 
         fig.add_trace(
             go.Scatter(
-                x=x,
+                x=x_fine,
+                y=T0_fine,
+                mode="lines",
+                name="Initial T(x, 0) = 1 - |2x - 1|",
+                line=dict(color="#6B7280", width=2, dash="dash"),
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=x_fine,
                 y=T_exact,
                 mode="lines",
-                name=f"Exact Solution (t = {t_final:.4f})",
+                name=f"Exact Solution (t = {t_val:.4f})",
                 line=dict(color="#1F2937", width=2.5),
-                visible=vis,
-            )
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=x,
-                y=T_hist[num_steps // 2],
-                mode="lines+markers",
-                name=f"Forward Euler (step {num_steps // 2}, t = {t_mid:.4f})",
-                line=dict(color="#3B82F6", width=2, dash="dot"),
-                marker=dict(size=5),
-                visible=vis,
-            )
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=x,
-                y=T_hist[-1],
-                mode="lines+markers",
-                name=f"Forward Euler (step {num_steps}, t = {t_final:.4f})",
-                line=dict(color="#DC2626", width=2.5),
-                marker=dict(size=6),
-                visible=vis,
             )
         )
 
-    steps = []
-    for idx, dt in enumerate(dt_values):
-        r_val = alpha * dt / (dx_actual**2)
-        status = "Stable (r ≤ 0.5)" if r_val <= 0.5001 else "Unstable (r > 0.5)"
-        vis_mask = [True] + [False] * (traces_per_step * len(dt_values))
-        for k in range(traces_per_step):
-            vis_mask[1 + idx * traces_per_step + k] = True
-        steps.append(
-            dict(
-                method="update",
-                args=[
-                    {"visible": vis_mask},
-                    {
-                        "title": (
-                            f"1D Heat Equation via Forward Euler "
-                            f"(Δx = {dx_actual:.3f}, Δt = {dt:.5f}, r = {r_val:.2f} — {status})"
-                        )
-                    },
-                ],
-                label=f"{dt:.5f} (r={r_val:.2f})",
-            )
-        )
-
-    r_def = alpha * dt_values[default_idx] / (dx_actual**2)
-    fig.update_layout(
-        title=(
-            f"1D Heat Equation via Forward Euler "
-            f"(Δx = {dx_actual:.3f}, Δt = {dt_values[default_idx]:.5f}, r = {r_def:.2f} — Stable (r ≤ 0.5))"
-        ),
-        xaxis_title="Position x",
-        yaxis_title="Temperature T(x, t)",
-        yaxis=dict(range=[-0.6, 1.4]),
-        template="plotly_white",
-        hovermode="x unified",
-        height=520,
-        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255, 255, 255, 0.85)"),
-        sliders=[
-            dict(
-                active=default_idx,
-                currentvalue={"prefix": "Time step Δt = "},
-                pad={"t": 45},
-                steps=steps,
-            )
-        ],
-    )
-    return fig
-
-
-def plot_backward_euler_heat(alpha=0.1, dx=0.05, dt_values=None, num_steps=25):
-    if dt_values is None:
-        dt_values = [0.005, 0.01, 0.025, 0.05, 0.1]
-
-    x = np.linspace(0.0, 1.0, int(round(1.0 / dx)) + 1)
-    dx_actual = x[1] - x[0]
-    n = len(x)
-    T0 = np.zeros_like(x)
-    T0[n // 2] = 1.0
-
-    fig = make_subplots(
-        rows=1,
-        cols=2,
-        column_widths=[0.65, 0.35],
-        subplot_titles=(
-            "Backward Euler Temperature Profiles T(x, t)",
-            "Tridiagonal Sparsity Pattern of Matrix A",
-        ),
-        horizontal_spacing=0.12,
-    )
-
-    sample_steps = [0, 2, 5, 12, num_steps]
-    palette = ["#6B7280", "#2563EB", "#059669", "#D97706", "#DC2626"]
-    default_idx = 2
-
-    traces_per_dt = len(sample_steps)
-    for idx, dt in enumerate(dt_values):
-        vis = idx == default_idx
-        T_hist = backward_euler_heat(T0, alpha, dx_actual, dt, num_steps)
-        for s_idx, step_num in enumerate(sample_steps):
+        if method == "forward_euler":
+            T_num = forward_euler_heat(T0, alpha, dx_actual, dt_val, step_val)[-1]
+            # Cap extreme blow-up values so Plotly SVG coordinates stay responsive
+            T_plot = np.clip(np.nan_to_num(T_num, posinf=1e4, neginf=-1e4), -1e4, 1e4)
+            status = "Stable (r ≤ 0.5)" if r_euler <= 0.5001 else "Unstable (r > 0.5)!"
             fig.add_trace(
                 go.Scatter(
                     x=x,
-                    y=T_hist[step_num],
-                    mode="lines+markers" if step_num > 0 else "lines",
-                    name=f"Step {step_num} (t = {step_num * dt:.3f})",
-                    line=dict(
-                        color=palette[s_idx],
-                        width=2.2,
-                        dash="dash" if step_num == 0 else "solid",
-                    ),
-                    marker=dict(size=5),
-                    visible=vis,
-                ),
-                row=1,
-                col=1,
+                    y=T_plot,
+                    mode="lines+markers",
+                    name=f"Forward Euler (step {step_val})",
+                    line=dict(color="#DC2626", width=2.5),
+                    marker=dict(size=6),
+                )
             )
-
-    # Sparsity pattern trace on col=2 (always visible)
-    rows_idx, cols_idx = [], []
-    for i in range(n):
-        rows_idx.append(i)
-        cols_idx.append(i)
-        if i > 0 and i < n - 1:
-            rows_idx.extend([i, i])
-            cols_idx.extend([i - 1, i + 1])
-
-    fig.add_trace(
-        go.Scatter(
-            x=cols_idx,
-            y=rows_idx,
-            mode="markers",
-            name="Non-zero entries of A",
-            marker=dict(symbol="square", size=7, color="#1E3A8A"),
-            showlegend=False,
-            visible=True,
-        ),
-        row=1,
-        col=2,
-    )
-
-    steps = []
-    total_temp_traces = traces_per_dt * len(dt_values)
-    for idx, dt in enumerate(dt_values):
-        r_val = alpha * dt / (dx_actual**2)
-        vis_mask = [False] * total_temp_traces + [True]
-        for k in range(traces_per_dt):
-            vis_mask[idx * traces_per_dt + k] = True
-        steps.append(
-            dict(
-                method="update",
-                args=[
-                    {"visible": vis_mask},
-                    {
-                        "title": (
-                            f"Backward Euler 1D Heat Diffusion "
-                            f"(Δt = {dt:.3f}, r = {r_val:.2f} — Unconditionally Stable)"
-                        )
-                    },
-                ],
-                label=f"Δt={dt:.3f} (r={r_val:.1f})",
+            title = (
+                f"1D Heat Equation via Forward Euler "
+                f"(Δx = {dx_actual:.3f}, Δt = {dt_val:.4f}, step = {step_val}, "
+                f"t = {t_val:.4f}, r = {r_euler:.2f} — {status})"
             )
+            fig.update_xaxes(title_text="Position x")
+            fig.update_yaxes(title_text="Temperature T(x, t)", range=[-0.6, 1.6])
+        elif method == "backward_euler":
+            T_num = backward_euler_heat(T0, alpha, dx_actual, dt_val, step_val)[-1]
+            fig.add_trace(
+                go.Scatter(
+                    x=x,
+                    y=T_num,
+                    mode="lines+markers",
+                    name=f"Backward Euler (step {step_val})",
+                    line=dict(color="#2563EB", width=2.5),
+                    marker=dict(size=6),
+                )
+            )
+            title = (
+                f"1D Heat Equation via Backward Euler "
+                f"(Δx = {dx_actual:.3f}, Δt = {dt_val:.4f}, step = {step_val}, "
+                f"t = {t_val:.4f}, r = {r_euler:.2f} — Unconditionally Stable)"
+            )
+            fig.update_xaxes(title_text="Position x")
+            fig.update_yaxes(title_text="Temperature T(x, t)", range=[-0.1, 1.1])
+        elif method == "crank_nicolson":
+            T_cn = crank_nicolson_heat(T0, alpha, dx_actual, dt_val, step_val)[-1]
+            T_be = backward_euler_heat(T0, alpha, dx_actual, dt_val, step_val)[-1]
+            r_cn = alpha * dt_val / (2.0 * dx_actual**2)
+            fig.add_trace(
+                go.Scatter(
+                    x=x,
+                    y=T_be,
+                    mode="lines+markers",
+                    name=f"Backward Euler (1st-order, step {step_val})",
+                    line=dict(color="#2563EB", width=2, dash="dot"),
+                    marker=dict(size=5, symbol="square"),
+                )
+            )
+            fig.add_trace(
+                go.Scatter(
+                    x=x,
+                    y=T_cn,
+                    mode="lines+markers",
+                    name=f"Crank-Nicolson (2nd-order, step {step_val})",
+                    line=dict(color="#059669", width=2.5),
+                    marker=dict(size=6, symbol="diamond"),
+                )
+            )
+            title = (
+                f"1D Heat Equation via Crank-Nicolson "
+                f"(Δx = {dx_actual:.3f}, Δt = {dt_val:.4f}, step = {step_val}, "
+                f"t = {t_val:.4f}, r = {r_cn:.2f} — Unconditionally Stable)"
+            )
+            fig.update_xaxes(title_text="Position x")
+            fig.update_yaxes(title_text="Temperature T(x, t)", range=[-0.1, 1.1])
+        else:
+            raise ValueError(f"Unknown heat solver method: {method}")
+
+        fig.update_layout(
+            title=title,
+            template="plotly_white",
+            hovermode="x unified",
+            height=480,
+            margin=dict(t=85, b=50, l=60, r=30),
+            legend=dict(x=0.01, y=0.98, bgcolor="rgba(255, 255, 255, 0.85)"),
         )
+        display(fig)
 
-    r_def = alpha * dt_values[default_idx] / (dx_actual**2)
-    fig.update_xaxes(title_text="Position x", row=1, col=1)
-    fig.update_yaxes(title_text="Temperature T(x, t)", range=[-0.05, 1.05], row=1, col=1)
-    fig.update_xaxes(title_text="Column Index j", range=[-1, n], row=1, col=2)
-    fig.update_yaxes(
-        title_text="Row Index i",
-        range=[n, -1],
-        scaleanchor="x2",
-        scaleratio=1,
-        row=1,
-        col=2,
+    out = widgets.interactive_output(
+        render,
+        {"dx_val": dx_slider, "dt_val": dt_slider, "step_val": step_slider},
     )
-    fig.update_layout(
-        title=(
-            f"Backward Euler 1D Heat Diffusion "
-            f"(Δt = {dt_values[default_idx]:.3f}, r = {r_def:.2f} — Unconditionally Stable)"
-        ),
-        template="plotly_white",
-        hovermode="closest",
-        height=520,
-        legend=dict(x=0.01, y=0.98, bgcolor="rgba(255, 255, 255, 0.85)"),
-        sliders=[
-            dict(
-                active=default_idx,
-                currentvalue={"prefix": "Selected step: "},
-                pad={"t": 45},
-                steps=steps,
-            )
-        ],
+    controls = widgets.HBox(
+        [dx_slider, dt_slider, step_slider],
+        layout=widgets.Layout(flex_flow="row wrap", gap="12px"),
     )
-    return fig
+    display(widgets.VBox([controls, out]))
+
+
+def plot_forward_euler_heat(alpha=1.0, dx=0.05, dt=0.0010, steps=20, max_steps=50):
+    """Display interactive 3-slider Forward Euler 1D heat equation visualizer."""
+    _interactive_heat_widget("forward_euler", alpha=alpha, dx=dx, dt=dt, steps=steps, max_steps=max_steps)
+
+
+def plot_backward_euler_heat(alpha=1.0, dx=0.05, dt=0.0025, steps=10, max_steps=50):
+    """Display interactive 3-slider Backward Euler 1D heat equation visualizer."""
+    _interactive_heat_widget("backward_euler", alpha=alpha, dx=dx, dt=dt, steps=steps, max_steps=max_steps)
+
+
+def plot_crank_nicolson_heat(alpha=1.0, dx=0.05, dt=0.0050, steps=10, max_steps=50):
+    """Display interactive 3-slider Crank-Nicolson 1D heat equation visualizer."""
+    _interactive_heat_widget("crank_nicolson", alpha=alpha, dx=dx, dt=dt, steps=steps, max_steps=max_steps)
+
+
+plot_crank_nicholson_heat = plot_crank_nicolson_heat
 
 
 def plot_pde_method_comparison(alpha=0.1, dx=0.1, dt=0.02, num_steps=6):

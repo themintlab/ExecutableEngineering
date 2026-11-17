@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="45.206982mm"
+   height="19.427141mm"
+   viewBox="0 0 45.206982 19.427141"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="forward Euler stencil.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-42.376382,-101.78711)">
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle9"
+       cx="44.20295"
+       cy="-104.04185"
+       r="1.8265682"
+       inkscape:export-filename="backward Euler stencil.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       transform="scale(1,-1)" />
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle10"
+       cx="58.22588"
+       cy="-104.04185"
+       r="1.8265682"
+       transform="scale(1,-1)" />
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle11"
+       cx="72.24881"
+       cy="-104.04185"
+       r="1.8265682"
+       transform="scale(1,-1)" />
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle12"
+       cx="58.22588"
+       cy="-119.38768"
+       r="1.8265682"
+       transform="scale(1,-1)" />
+    <path
+       style="fill:#000000;stroke-width:0.264583"
+       d="M 58.08487,119.01968 V 104.40706"
+       id="path12" />
+    <path
+       style="fill:#000000;stroke-width:0.264583"
+       d="M 44.202953,104.04174 H 72.697416"
+       id="path13" />
+    <circle
+       id="circle13"
+       style="fill:#000000;stroke:none;stroke-width:0.264583"
+       cx="72.697418"
+       cy="-104.04185"
+       r="0.79374999"
+       transform="scale(1,-1)" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="m 44.202953,104.04174 h 28.12915"
+       id="path14" />
+    <circle
+       id="circle14"
+       style="fill:#000000;stroke:none;stroke-width:0.264583"
+       cx="72.332108"
+       cy="-104.40715"
+       r="0.39687499"
+       transform="scale(1,-1)" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="m 58.22588,104.21446 v 15.11155"
+       id="path15" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       x="80.077888"
+       y="120.6357"
+       id="text15"><tspan
+         sodipodi:role="line"
+         id="tspan15"
+         style="stroke-width:0.264583"
+         x="80.077888"
+         y="120.6357">t</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       x="80.077888"
+       y="105.00758"
+       id="text16"><tspan
+         sodipodi:role="line"
+         id="tspan16"
+         style="stroke-width:0.264583"
+         x="80.077888"
+         y="105.00758">t+1</tspan></text>
+  </g>
+</svg>

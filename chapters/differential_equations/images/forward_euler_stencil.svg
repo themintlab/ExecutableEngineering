@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="45.206982mm"
+   height="19.427116mm"
+   viewBox="0 0 45.206982 19.427116"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="forward Euler stencil.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-42.376382,-68.978781)">
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="path1"
+       cx="44.20295"
+       cy="86.57933"
+       r="1.8265682"
+       inkscape:export-filename=".\path1.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle1"
+       cx="58.22588"
+       cy="86.57933"
+       r="1.8265682" />
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle2"
+       cx="72.24881"
+       cy="86.57933"
+       r="1.8265682" />
+    <circle
+       style="fill:#000000;stroke-width:0.264583"
+       id="circle3"
+       cx="58.22588"
+       cy="71.233482"
+       r="1.8265682" />
+    <path
+       style="fill:#000000;stroke-width:0.264583"
+       d="M 58.08487,71.601475 V 86.21402"
+       id="path3" />
+    <path
+       style="fill:#000000;stroke-width:0.264583"
+       d="M 44.202953,86.579336 H 72.697416"
+       id="path4" />
+    <circle
+       id="path5"
+       style="fill:#000000;stroke:none;stroke-width:0.264583"
+       cx="72.697418"
+       cy="86.579338"
+       r="0.79374999" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="m 44.202953,86.579336 h 28.12915"
+       id="path6" />
+    <circle
+       id="path7"
+       style="fill:#000000;stroke:none;stroke-width:0.264583"
+       cx="72.332108"
+       cy="86.21402"
+       r="0.39687499" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="M 58.22588,86.406621 V 71.295151"
+       id="path8" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       x="80.077888"
+       y="87.827362"
+       id="text8"><tspan
+         sodipodi:role="line"
+         id="tspan8"
+         style="stroke-width:0.264583"
+         x="80.077888"
+         y="87.827362">t</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;fill:#000000;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       x="80.077888"
+       y="72.199257"
+       id="text9"><tspan
+         sodipodi:role="line"
+         id="tspan9"
+         style="stroke-width:0.264583"
+         x="80.077888"
+         y="72.199257">t+1</tspan></text>
+  </g>
+</svg>
