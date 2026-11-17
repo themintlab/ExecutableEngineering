@@ -24,7 +24,6 @@ project:
   exports:
     - format: pdf
       template: plain_latex_book
-      toc: toc.yml
       output: _build/exports/book.pdf
   exclude:
     - _build
