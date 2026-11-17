@@ -35,7 +35,7 @@ project:
 
 
 site: 
-  template: book-theme
+  template: https://github.com/jupyter-book/myst-theme/releases/download/myst-to-react%401.4.1/book-theme.zip
   parts:
     primary_sidebar_footer: ""
 
