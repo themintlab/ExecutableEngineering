@@ -145,6 +145,13 @@ from .differential_equations_module import (
     plot_fdm_nonlinear,
     plot_fdm_poisson_2d,
 )
+from .fem_module import (
+    fem_heat_1d_linear,
+    fem_heat_1d_nonlinear_lagged,
+    fem_heat_1d_nonlinear_root,
+    plot_matrix_sparsity,
+    plot_fem_heat_1d,
+)
 
 from .display_code_module import display_source
 
@@ -293,5 +300,11 @@ __all__ = [
   "plot_fdm_neumann_convergence",
   "plot_fdm_nonlinear",
   "plot_fdm_poisson_2d",
+  # Finite element method module
+  "fem_heat_1d_linear",
+  "fem_heat_1d_nonlinear_lagged",
+  "fem_heat_1d_nonlinear_root",
+  "plot_matrix_sparsity",
+  "plot_fem_heat_1d",
   "display_source",
 ]
